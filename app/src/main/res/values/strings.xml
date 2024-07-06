@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Week2</string>
+    <string name="kakao_native_key">72bbc88b30bb8f0e5a7318145a2a4d8c</string>
+    <string name="kakao_key">kakao72bbc88b30bb8f0e5a7318145a2a4d8c</string>
 </resources>
