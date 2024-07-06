@@ -5,7 +5,6 @@ import android.widget.ImageButton
 import androidx.appcompat.app.AppCompatActivity
 import android.content.Intent
 import android.util.Log
-import com.kakao.sdk.common.util.Utility
 import com.kakao.sdk.user.UserApiClient
 
 class MainActivity : AppCompatActivity() {
