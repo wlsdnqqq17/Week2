@@ -16,7 +16,6 @@ package com.example.week2
  * limitations under the License.
  */
 
-
 import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
@@ -96,3 +95,4 @@ abstract class WordRoomDatabase : RoomDatabase() {
         }
     }
 }
+
