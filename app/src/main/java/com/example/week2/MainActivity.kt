@@ -12,7 +12,8 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
+        val intent = Intent(this, NextPageActivity::class.java)
+        startActivity(intent)
         val kakaoLoginButton: ImageButton = findViewById(R.id.kakao_login_button)
         kakaoLoginButton.setOnClickListener {
             // 카카오톡이 설치되어 있는지 확인
