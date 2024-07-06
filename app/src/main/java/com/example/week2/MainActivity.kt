@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.widget.ImageButton
 import androidx.appcompat.app.AppCompatActivity
 import android.content.Intent
+import android.util.Log
 import com.kakao.sdk.user.UserApiClient
 
 class MainActivity : AppCompatActivity() {
@@ -19,13 +20,15 @@ class MainActivity : AppCompatActivity() {
                 UserApiClient.instance.loginWithKakaoTalk(this) { token, error ->
                     if (error != null) {
                         // 로그인 실패
-                        error.printStackTrace()
+                        Log.e("KakaoLogin", "로그인 실패", error)
                     } else if (token != null) {
                         // 로그인 성공
+                        Log.i("KakaoLogin", "로그인 성공")
                         UserApiClient.instance.accessTokenInfo { tokenInfo, error ->
                             if (error != null) {
-                                error.printStackTrace()
+                                Log.e("KakaoLogin", "토큰 정보 조회 실패", error)
                             } else if (tokenInfo != null) {
+                                Log.i("KakaoLogin", "토큰 정보: ${tokenInfo.id}")
                                 // 다음 페이지로 이동
                                 val intent = Intent(this, NextPageActivity::class.java)
                                 startActivity(intent)
@@ -37,13 +40,15 @@ class MainActivity : AppCompatActivity() {
                 UserApiClient.instance.loginWithKakaoAccount(this) { token, error ->
                     if (error != null) {
                         // 로그인 실패
-                        error.printStackTrace()
+                        Log.e("KakaoLogin", "로그인 실패", error)
                     } else if (token != null) {
                         // 로그인 성공
+                        Log.i("KakaoLogin", "로그인 성공")
                         UserApiClient.instance.accessTokenInfo { tokenInfo, error ->
                             if (error != null) {
-                                error.printStackTrace()
+                                Log.e("KakaoLogin", "토큰 정보 조회 실패", error)
                             } else if (tokenInfo != null) {
+                                Log.i("KakaoLogin", "토큰 정보: ${tokenInfo.id}")
                                 // 다음 페이지로 이동
                                 val intent = Intent(this, NextPageActivity::class.java)
                                 startActivity(intent)
@@ -55,4 +60,3 @@ class MainActivity : AppCompatActivity() {
         }
     }
 }
-
