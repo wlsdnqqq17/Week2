@@ -2,4 +2,12 @@
     <string name="app_name">Week2</string>
     <string name="kakao_native_key">72bbc88b30bb8f0e5a7318145a2a4d8c</string>
     <string name="kakao_key">kakao72bbc88b30bb8f0e5a7318145a2a4d8c</string>
+    <string name="screenname_1">달력</string>
+    <string name="screenname_2">감자</string>
+    <string name="screenname_3">가방</string>
+    <string name="screenname_4">상점</string>
+    <string name="screenname_5">식비</string>
+    <string name="screenname_6">정보</string>
+    <string name="screenname_7">친구</string>
+    <string name="meal_activity">Meal Activity</string>
 </resources>
