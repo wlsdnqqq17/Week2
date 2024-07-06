@@ -63,5 +63,9 @@ dependencies {
 
     // optional - Paging 3 Integration
     implementation (libs.androidx.room.paging)
+
+    implementation (libs.androidx.lifecycle.viewmodel.ktx)
+    implementation (libs.androidx.lifecycle.livedata.ktx)
+    implementation (libs.androidx.lifecycle.common.java8)
     implementation (libs.v2.all)
 }
