@@ -37,6 +37,12 @@
             </intent-filter>
         </activity>
         <activity android:name=".MealActivity" />
+        <activity android:name=".InventoryActivity" />
+        <activity android:name=".FriendActivity" />
+        <activity android:name=".CalendarActivity" />
+        <activity android:name=".StoreActivity" />
+        <activity android:name=".InfoActivity" />
+        <activity android:name=".PotatoActivity" />
         <activity android:name=".NextPageActivity"/>
     </application>
 
