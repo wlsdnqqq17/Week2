@@ -7,5 +7,6 @@ class NextPageActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.next_page)
+
     }
 }
