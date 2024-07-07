@@ -29,48 +29,40 @@ import kotlinx.coroutines.launch
  * This is the backend. The database. This used to be done by the OpenHelper.
  * The fact that this has very few comments emphasizes its coolness.
  */
-@Database(entities = [Word::class], version = 1)
-abstract class WordRoomDatabase : RoomDatabase() {
+@Database(entities = [Word::class, Meal::class], version = 1)
+abstract class AppRoomDatabase : RoomDatabase() {
 
     abstract fun wordDao(): WordDao
+    abstract fun mealDao(): MealDao
 
     companion object {
         @Volatile
-        private var INSTANCE: WordRoomDatabase? = null
+        private var INSTANCE: AppRoomDatabase? = null
 
         fun getDatabase(
             context: Context,
             scope: CoroutineScope
-        ): WordRoomDatabase {
-            // if the INSTANCE is not null, then return it,
-            // if it is, then create the database
+        ): AppRoomDatabase {
             return INSTANCE ?: synchronized(this) {
+                context.deleteDatabase("app_database")
                 val instance = Room.databaseBuilder(
                     context.applicationContext,
-                    WordRoomDatabase::class.java,
-                    "word_database"
+                    AppRoomDatabase::class.java,
+                    "app_database"
                 )
-                    // Wipes and rebuilds instead of migrating if no Migration object.
-                    // Migration is not part of this codelab.
                     .fallbackToDestructiveMigration()
                     .addCallback(WordDatabaseCallback(scope))
                     .build()
                 INSTANCE = instance
-                // return instance
                 instance
             }
         }
 
         private class WordDatabaseCallback(
             private val scope: CoroutineScope
-        ) : RoomDatabase.Callback() {
-            /**
-             * Override the onCreate method to populate the database.
-             */
+        ) : Callback() {
             override fun onCreate(db: SupportSQLiteDatabase) {
                 super.onCreate(db)
-                // If you want to keep the data through app restarts,
-                // comment out the following line.
                 INSTANCE?.let { database ->
                     scope.launch(Dispatchers.IO) {
                         populateDatabase(database.wordDao())
