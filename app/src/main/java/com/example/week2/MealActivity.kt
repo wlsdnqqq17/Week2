@@ -38,7 +38,8 @@ class MealActivity : AppCompatActivity() {
         val fab = findViewById<FloatingActionButton>(R.id.fab)
         fab.setOnClickListener {
             val intent = Intent(this@MealActivity, NewWordActivity::class.java)
-            startActivityForResult(intent, newWordActivityRequestCode)
+            startActivity(intent)
+            //startActivityForResult(intent, newWordActivityRequestCode)
         }
 
 
