@@ -47,8 +47,10 @@ class PotatoActivity : AppCompatActivity() {
         ) { result ->
             if (result.resultCode == Activity.RESULT_OK) {
                 result.data?.getStringExtra(NewWordActivity.EXTRA_REPLY)?.let { reply ->
-                    val word = Word(reply)
-                    wordViewModel.insert(word)
+                    if (reply.isNotEmpty()) {
+                        val word = Word(reply)
+                        wordViewModel.insert(word)
+                    }
                 }
             } else {
                 Toast.makeText(

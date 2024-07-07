@@ -62,6 +62,12 @@ class MealActivity : AppCompatActivity() {
                         memo = memo
                     )
                     mealViewModel.insert(meal)
+                } else {
+                    Toast.makeText(
+                        applicationContext,
+                        R.string.empty_not_saved,
+                        Toast.LENGTH_LONG
+                    ).show()
                 }
             } else {
                 Toast.makeText(
