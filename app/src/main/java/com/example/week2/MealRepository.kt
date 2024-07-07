@@ -20,4 +20,14 @@ class MealRepository(private val mealDao: MealDao) {
     suspend fun insert(meal: Meal) {
         mealDao.insert(meal)
     }
+
+    @WorkerThread
+    suspend fun update(meal: Meal) {
+        mealDao.update(meal)
+    }
+
+    @WorkerThread
+    suspend fun delete(meal: Meal) {
+        mealDao.delete(meal)
+    }
 }
