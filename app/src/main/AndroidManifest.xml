@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <application
-        android:name=".GlobalApplication"
+        android:name=".WordsApplication"
 
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -44,6 +44,8 @@
         <activity android:name=".InfoActivity" />
         <activity android:name=".PotatoActivity" />
         <activity android:name=".NextPageActivity"/>
+        <activity android:name=".NewWordActivity"/>
+        <activity android:name=".NewMealActivity"/>
     </application>
 
     <uses-permission android:name="android.permission.INTERNET" />
