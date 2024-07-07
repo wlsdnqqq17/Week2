@@ -65,14 +65,14 @@ class MealActivity : AppCompatActivity() {
                 } else {
                     Toast.makeText(
                         applicationContext,
-                        R.string.empty_not_saved,
+                        R.string.meal_empty_not_saved,
                         Toast.LENGTH_LONG
                     ).show()
                 }
             } else {
                 Toast.makeText(
                     applicationContext,
-                    R.string.empty_not_saved,
+                    R.string.meal_empty_not_saved,
                     Toast.LENGTH_LONG
                 ).show()
             }

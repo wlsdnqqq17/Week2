@@ -55,7 +55,7 @@ class PotatoActivity : AppCompatActivity() {
             } else {
                 Toast.makeText(
                     applicationContext,
-                    R.string.empty_not_saved,
+                    R.string.word_empty_not_saved,
                     Toast.LENGTH_LONG
                 ).show()
             }
