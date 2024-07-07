@@ -45,6 +45,7 @@
         <activity android:name=".PotatoActivity" />
         <activity android:name=".NextPageActivity"/>
         <activity android:name=".NewWordActivity"/>
+        <activity android:name=".NewMealActivity"/>
     </application>
 
     <uses-permission android:name="android.permission.INTERNET" />

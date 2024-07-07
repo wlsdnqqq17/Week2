@@ -15,11 +15,11 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class MealActivity : AppCompatActivity() {
 
-    private val wordViewModel: WordViewModel by viewModels {
-        WordViewModelFactory((application as WordsApplication).repository)
+    private val mealViewModel: MealViewModel by viewModels {
+        MealViewModelFactory((application as WordsApplication).mealRepository)
     }
 
-    private lateinit var newWordActivityLauncher: ActivityResultLauncher<Intent>
+    private lateinit var newMealActivityLauncher: ActivityResultLauncher<Intent>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,23 +32,36 @@ class MealActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         val recyclerView = findViewById<RecyclerView>(R.id.recyclerview)
-        val adapter = WordListAdapter()
+        val adapter = MealListAdapter()
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(this)
 
         val fab = findViewById<FloatingActionButton>(R.id.fab)
         fab.setOnClickListener {
-            val intent = Intent(this@MealActivity, NewWordActivity::class.java)
-            newWordActivityLauncher.launch(intent)
+            val intent = Intent(this@MealActivity, NewMealActivity::class.java)
+            newMealActivityLauncher.launch(intent)
         }
 
-        newWordActivityLauncher = registerForActivityResult(
+        newMealActivityLauncher = registerForActivityResult(
             ActivityResultContracts.StartActivityForResult()
         ) { result ->
             if (result.resultCode == Activity.RESULT_OK) {
-                result.data?.getStringExtra(NewWordActivity.EXTRA_REPLY)?.let { reply ->
-                    val word = Word(reply)
-                    wordViewModel.insert(word)
+                val data = result.data
+                if (data != null) {
+                    val mealTime = data.getStringExtra(NewMealActivity.EXTRA_MEAL_TIME) ?: ""
+                    val mealName = data.getStringExtra(NewMealActivity.EXTRA_MEAL_NAME) ?: ""
+                    val price = data.getIntExtra(NewMealActivity.EXTRA_PRICE, 0)
+                    val date = data.getStringExtra(NewMealActivity.EXTRA_DATE) ?: ""
+                    val memo = data.getStringExtra(NewMealActivity.EXTRA_MEMO)
+
+                    val meal = Meal(
+                        mealTime = mealTime,
+                        mealName = mealName,
+                        price = price,
+                        date = date,
+                        memo = memo
+                    )
+                    mealViewModel.insert(meal)
                 }
             } else {
                 Toast.makeText(
@@ -59,8 +72,8 @@ class MealActivity : AppCompatActivity() {
             }
         }
 
-        wordViewModel.allWords.observe(this) { words ->
-            words.let { adapter.submitList(it) }
+        mealViewModel.todayMeals.observe(this) { meals ->
+            meals.let { adapter.submitList(it) }
         }
     }
 

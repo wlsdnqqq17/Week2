@@ -16,7 +16,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 class PotatoActivity : AppCompatActivity() {
 
     private val wordViewModel: WordViewModel by viewModels {
-        WordViewModelFactory((application as WordsApplication).repository)
+        WordViewModelFactory((application as WordsApplication).wordRepository)
     }
 
     private lateinit var newWordActivityLauncher: ActivityResultLauncher<Intent>

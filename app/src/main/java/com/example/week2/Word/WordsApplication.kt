@@ -11,5 +11,6 @@ class WordsApplication : Application() {
     // Using by lazy so the database and the repository are only created when they're needed
     // rather than when the application starts
     val database by lazy { AppRoomDatabase.getDatabase(this, applicationScope) }
-    val repository by lazy { WordRepository(database.wordDao()) }
+    val wordRepository by lazy { WordRepository(database.wordDao()) }
+    val mealRepository by lazy { MealRepository(database.mealDao()) }
 }
