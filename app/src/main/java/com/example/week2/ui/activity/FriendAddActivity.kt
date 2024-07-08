@@ -59,6 +59,7 @@ class FriendAddActivity : AppCompatActivity() {
                     resultId.text = "아이디: ${user?.login_id}"
                     resultNickname.text = "닉네임: ${user?.nickname}"
                     resultButton.setOnClickListener{
+                        sendFriendRequest(userId, user?.login_id) // 첫 번째 argument에 본인 userid 필요
                         Toast.makeText(this@FriendAddActivity, "${user?.nickname}에게 친구 신청을 보냈습니다.",Toast.LENGTH_SHORT).show()
                     }
                 } else {
@@ -70,6 +71,23 @@ class FriendAddActivity : AppCompatActivity() {
             override fun onFailure(call: Call<UserResponse>, t: Throwable) {
                 searchResult.visibility = View.GONE
                 Toast.makeText(this@FriendAddActivity, "검색 중 오류가 발생했습니다.", Toast.LENGTH_SHORT).show()
+            }
+        })
+    }
+
+    private fun sendFriendRequest(fromUserId: String, toUserId: String?) {
+        val friendRequest = FriendRequest(from_user_id = fromUserId, to_user_id = toUserId ?: "")
+        apiService.addFriend(friendRequest).enqueue(object : Callback<Void> {
+            override fun onResponse(call: Call<Void>, response: Response<Void>) {
+                if (response.isSuccessful) {
+                    Toast.makeText(this@FriendAddActivity, "친구 신청을 보냈습니다.", Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(this@FriendAddActivity, "친구 신청을 보내지 못했습니다.", Toast.LENGTH_SHORT).show()
+                }
+            }
+
+            override fun onFailure(call: Call<Void>, t: Throwable) {
+                Toast.makeText(this@FriendAddActivity, "친구 신청 중 오류가 발생했습니다.", Toast.LENGTH_SHORT).show()
             }
         })
     }

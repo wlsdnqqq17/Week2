@@ -5,6 +5,7 @@ import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.Path
 import retrofit2.http.Query
 import retrofit2.http.Url
 
@@ -27,6 +28,11 @@ data class Item(
     val price: Int
 )
 
+data class FriendRequest(
+    val from_user_id: String,
+    val to_user_id: String
+)
+
 interface ApiService {
     @POST("save_kakao_user/")
     fun saveKakaoUser(@Body user: User): Call<Void>
@@ -36,5 +42,11 @@ interface ApiService {
 
     @GET("get_items/")
     fun getShopItems(): Call<List<Item>>
+
+    @POST("add_friend/")
+    fun addFriend(@Body friendRequest: FriendRequest): Call<Void>
+
+    @GET("get_friends/{user_id}/")
+    fun getFriends(@Path("user_id") userId: String): Call<List<User>>
 }
 
