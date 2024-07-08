@@ -71,7 +71,7 @@ class MainActivity : AppCompatActivity() {
             override fun onResponse(call: Call<Void>, response: Response<Void>) {
                 if (response.isSuccessful) {
                     Log.i("ServerResponse", "User data sent successfully")
-                    val intent = Intent(this@MainActivity, HomeActivity::class.java)
+                    val intent = Intent(this@MainActivity, HomePageActivity::class.java)
                     startActivity(intent)
                 } else {
                     Log.e("ServerResponse", "Failed to send user data. Error code: ${response.code()}, Error body: ${response.errorBody()?.string()}")

@@ -1,6 +1,9 @@
-package com.example.week2
+package com.example.week2.data.word
 
 import android.app.Application
+import com.example.week2.data.AppRoomDatabase
+import com.example.week2.MealRepository
+import com.example.week2.R
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
 import com.kakao.sdk.common.KakaoSdk

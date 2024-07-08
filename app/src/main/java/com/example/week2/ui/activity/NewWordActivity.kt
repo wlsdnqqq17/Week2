@@ -25,10 +25,6 @@ import android.widget.Button
 import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
 
-/**
- * Activity for entering a word.
- */
-
 class NewWordActivity : AppCompatActivity() {
 
     public override fun onCreate(savedInstanceState: Bundle?) {

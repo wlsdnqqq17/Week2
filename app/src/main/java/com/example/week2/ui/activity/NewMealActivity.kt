@@ -4,13 +4,19 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
+import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
+import android.widget.Spinner
 import androidx.appcompat.app.AppCompatActivity
+import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.util.Locale
 
 class NewMealActivity : AppCompatActivity() {
 
-    private lateinit var editMealTime: EditText
+    private lateinit var editMealTime: Spinner
     private lateinit var editMealName: EditText
     private lateinit var editPrice: EditText
     private lateinit var editDate: EditText
@@ -20,19 +26,33 @@ class NewMealActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_new_meal)
 
-        editMealTime = findViewById(R.id.edit_meal_time)
+        editMealTime = findViewById(R.id.spinner_meal_time)
         editMealName = findViewById(R.id.edit_meal_name)
         editPrice = findViewById(R.id.edit_price)
         editDate = findViewById(R.id.edit_date)
         editMemo = findViewById(R.id.edit_memo)
 
+        val formatter: DateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+        val formattedDate: String = LocalDate.now().format(formatter)
+
+        editDate.setText(formattedDate)
+
+        ArrayAdapter.createFromResource(
+            this,
+            R.array.meal_times_array,
+            android.R.layout.simple_spinner_item
+        ).also { adapter ->
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            editMealTime.adapter = adapter
+        }
+
         val button = findViewById<Button>(R.id.button_save)
         button.setOnClickListener {
             val replyIntent = Intent()
-            if (TextUtils.isEmpty(editMealTime.text) || TextUtils.isEmpty(editMealName.text) || TextUtils.isEmpty(editPrice.text) || TextUtils.isEmpty(editDate.text)) {
+            if (TextUtils.isEmpty(editMealTime.selectedItem.toString()) || TextUtils.isEmpty(editMealName.text) || TextUtils.isEmpty(editPrice.text) || TextUtils.isEmpty(editDate.text)) {
                 setResult(Activity.RESULT_CANCELED, replyIntent)
             } else {
-                val mealTime = editMealTime.text.toString()
+                val mealTime = editMealTime.selectedItem.toString()
                 val mealName = editMealName.text.toString()
                 val price = editPrice.text.toString().toInt()
                 val date = editDate.text.toString()
