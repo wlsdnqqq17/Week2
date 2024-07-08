@@ -19,7 +19,6 @@ class HomePageActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_homepage)
-
         val setBudgetButton: TextView = findViewById(R.id.budget_text)
         val mealIcon: ImageView = findViewById(R.id.meal_icon)
         val inventoryIcon: ImageView = findViewById(R.id.inventory)
