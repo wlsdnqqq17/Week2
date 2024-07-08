@@ -11,9 +11,10 @@ data class User(
     val nickname: String
 )
 
-data class UserResponse(
-    val success:Boolean,
-    val message: String
+data class UserResponse (
+    val success: Boolean,
+    val message: String?,
+    val data: User?
 )
 
 interface ApiService {
