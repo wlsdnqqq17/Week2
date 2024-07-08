@@ -10,6 +10,7 @@ import com.example.week2.data.item.Item
 import com.example.week2.data.item.ItemRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -41,7 +42,7 @@ class StoreActivity : AppCompatActivity() {
 
 
     private fun fetchShopItems() {
-        val url = "https://run.mocky.io/v3/d03ca3a8-0c7b-44ad-b4c2-d627cbcc19c0/"
+        val url = "https://run.mocky.io/v3/3b211402-549c-4d43-b22a-9437e3bbde58/"
         apiService.getShopItems(url).enqueue(object : Callback<List<Item>> {
             override fun onResponse(call: Call<List<Item>>, response: Response<List<Item>>) {
                 Log.d("ShopItems", "ShopItems: $response")
@@ -50,6 +51,7 @@ class StoreActivity : AppCompatActivity() {
                     val items = response.body()
                     items?.let {
                         Log.d("ShopItems", "ShopItems: $it")
+                        saveItemsToLocalDatabase(it)
                     }
                 }
             }
@@ -58,5 +60,17 @@ class StoreActivity : AppCompatActivity() {
                 Log.e("ShopItems", "실패!!", t)
             }
         })
+    }
+    private fun saveItemsToLocalDatabase(items: List<Item>) {
+        CoroutineScope(Dispatchers.IO).launch {
+
+            repository.deleteAll()
+
+            repository.insertAll(items)
+
+            repository.allItems.collect { allItems ->
+                Log.d("ShopItems", "After Inserting: $allItems")
+            }
+        }
     }
 }

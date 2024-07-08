@@ -20,4 +20,9 @@ interface ItemDao {
     @Delete
     suspend fun delete(item: Item)
 
+    @Query("DELETE FROM item_table")
+    suspend fun deleteAll()
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertItems(items: List<Item>)
 }

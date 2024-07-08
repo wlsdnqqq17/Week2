@@ -69,7 +69,7 @@ abstract class AppRoomDatabase : RoomDatabase() {
 //            word = Word("World!")
 //            wordDao.insert(word)
 
-            var meal = Meal( mealTime = "점심", mealName = "피자", price = 5000, date = "2024-07-08", memo = "")
+            var meal = Meal( mealTime = "점심", mealName = "피자", price = 5000, date = "2024-07-09", memo = "")
             mealDao.insert(meal)
             var item1 = Item( name = "벗기", category = "옷", imageUri = "", price = 3)
             itemDao.insert(item1)
