@@ -1,6 +1,8 @@
 package com.example.week2
 
+import android.content.Intent
 import android.os.Bundle
+import android.widget.ImageButton
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 
@@ -14,8 +16,13 @@ class FriendActivity : AppCompatActivity() {
 
         supportActionBar?.setDisplayShowTitleEnabled(false)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        //supportActionBar?.setDisplayShowHomeEnabled(true)
+        supportActionBar?.setDisplayShowHomeEnabled(true)
 
+        val addButton: ImageButton = findViewById(R.id.friend_add_button)
+        addButton.setOnClickListener {
+            val intent = Intent(this, FriendAddActivity::class.java)
+            startActivity(intent)
+        }
     }
     override fun onSupportNavigateUp(): Boolean {
         onBackPressedDispatcher.onBackPressed()

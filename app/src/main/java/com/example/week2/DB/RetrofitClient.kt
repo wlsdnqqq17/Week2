@@ -6,22 +6,24 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 object RetrofitClient {
-    private var retrofit: Retrofit? = null
+    private val BASE_URL = "http://13.124.112.168:8000/MyAvatar/"
 
-    fun getClient(baseUrl: String): Retrofit {
-        if (retrofit == null) {
-            val logging = HttpLoggingInterceptor()
-            logging.level = HttpLoggingInterceptor.Level.BODY
-            val httpClient = OkHttpClient.Builder()
-            httpClient.addInterceptor(logging)
-
-            retrofit = Retrofit.Builder()
-                .baseUrl(baseUrl)
-                .addConverterFactory(GsonConverterFactory.create())
-                .client(httpClient.build())
-                .build()
+    private val retrofit by lazy {
+        val logging = HttpLoggingInterceptor().apply {
+            level = HttpLoggingInterceptor.Level.BODY
         }
-        return retrofit!!
+        val httpClient = OkHttpClient.Builder().apply {
+            addInterceptor(logging)
+        }
+
+        Retrofit.Builder()
+            .baseUrl(BASE_URL)
+            .addConverterFactory(GsonConverterFactory.create())
+            .client(httpClient.build())
+            .build()
+    }
+
+    fun getInstance(): Retrofit {
+        return retrofit
     }
 }
-

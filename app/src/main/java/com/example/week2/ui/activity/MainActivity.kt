@@ -64,7 +64,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun sendUserToServer(loginId: String, nickname: String) {
-        val retrofit = RetrofitClient.getClient("http://10.0.2.2:8000/MyAvatar/")  // Django 서버의 URL을 입력하세요.
+        val retrofit = RetrofitClient.getInstance()
         val apiService = retrofit.create(ApiService::class.java)
         val user = User(loginId, nickname)
 

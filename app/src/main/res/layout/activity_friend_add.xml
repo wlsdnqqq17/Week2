@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/friend_search_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize">
+    </androidx.appcompat.widget.Toolbar>
+
+    <EditText
+        android:id="@+id/friend_search_EditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="추가하려는 사용자의 로그인 아이디를 입력하세요."
+        android:layout_margin="16dp"/>
+
+    <Button
+        android:id="@+id/friend_search_Button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="검색"
+        android:layout_margin="16dp" />
+
+    <LinearLayout
+        android:id="@+id/friend_search_result"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:id="@+id/friend_search_result_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/friend_search_result_id"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="16dp" />
+
+            <TextView
+                android:id="@+id/friend_search_result_nickname"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="16dp" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/friend_search_result_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="친구신청" />
+
+    </LinearLayout>
+
+
+</LinearLayout>
