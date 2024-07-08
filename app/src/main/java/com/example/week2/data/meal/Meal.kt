@@ -5,8 +5,6 @@ import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
 
-
-
 @Entity(tableName = "meal_table", indices = [Index(value = ["date"])])
 data class Meal(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
@@ -14,5 +12,5 @@ data class Meal(
     @ColumnInfo(name = "meal_name") val mealName: String,
     @ColumnInfo(name = "price") val price: Int,
     @ColumnInfo(name = "date") val date: String,
-    @ColumnInfo(name = "memo") val memo: String?
+    @ColumnInfo(name = "memo") val memo: String? = null
 )

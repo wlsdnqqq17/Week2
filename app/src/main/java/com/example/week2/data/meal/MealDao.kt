@@ -1,10 +1,6 @@
 package com.example.week2
 
-import androidx.room.Dao
-import androidx.room.Delete
-import androidx.room.Insert
-import androidx.room.Query
-import androidx.room.Update
+import androidx.room.*
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -20,4 +16,7 @@ interface MealDao {
 
     @Delete
     suspend fun delete(meal: Meal)
+
+    @Query("SELECT SUM(price) FROM meal_table WHERE date = :date")
+    fun getTodayMealCostSum(date: String): Flow<Int>
 }
