@@ -52,6 +52,7 @@ class FriendActivity : AppCompatActivity() {
         val sharedPref = getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
         val myLoginId = sharedPref.getString("login_id", null)
         if (myLoginId != null) {
+            getFriendRequests(myLoginId)
             getFriends(myLoginId)
         } else {
             Log.d("myLoginId", "login 아이디가 없음")
@@ -70,12 +71,12 @@ class FriendActivity : AppCompatActivity() {
                     response.body()?.let { friendRequestList.addAll(it) }
                     friendRequestAdapter.notifyDataSetChanged()
                 } else {
-                    Log.d("getFriendRequests", "getFriendRequests: 실패")
+                    Log.d("getFriendRequests", "getFriendRequests: 실패, code: ${response.code()}, error: ${response.errorBody()?.string()}")
                 }
             }
 
             override fun onFailure(call: Call<List<User>>, t: Throwable) {
-                Log.d("getFriendRequests", "getFriendRequests: 실패")
+                Log.d("getFriendRequests", "getFriendRequests: 실패, error: ${t.message}")
             }
         })
     }
@@ -88,12 +89,12 @@ class FriendActivity : AppCompatActivity() {
                     response.body()?.let { friendList.addAll(it) }
                     friendAdapter.notifyDataSetChanged()
                 } else {
-                    Log.d("getFriends", "getFriends: 실패")
+                    Log.d("getFriends", "getFriends: 실패, code: ${response.code()}, error: ${response.errorBody()?.string()}")
                 }
             }
 
             override fun onFailure(call: Call<List<User>>, t: Throwable) {
-                Log.d("getFriends", "getFriends: 실패")
+                Log.d("getFriends", "getFriends: 실패, error: ${t.message}")
             }
         })
     }
@@ -111,12 +112,14 @@ class FriendActivity : AppCompatActivity() {
                         getFriends(myLoginId)
                         Log.d("acceptFriendRequest", "친구 신청 수락")
                     } else {
-                        Log.d("acceptFriendRequest", "친구 신청 수락 실패")
+                        Log.d("acceptFriendRequest", "acceptFriendRequest\", \"친구 신청 수락 실패, code: ${response.code()}, error: ${
+                            response.errorBody()?.string()
+                        }")
                     }
                 }
 
                 override fun onFailure(call: Call<Void>, t: Throwable) {
-                    Log.d("acceptFriendRequest", "친구 신청 수락 실패")
+                    Log.d("acceptFriendRequest", "친구 신청 수락 실패, error: ${t.message}\"")
                 }
             })
         } else {
