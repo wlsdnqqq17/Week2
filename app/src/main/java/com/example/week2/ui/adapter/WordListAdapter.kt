@@ -1,4 +1,4 @@
-package com.example.week2
+package com.example.week2.ui.adapter
 
 /*
  * Copyright (C) 2017 Google Inc.
@@ -24,7 +24,9 @@ import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.example.week2.WordListAdapter.WordViewHolder
+import com.example.week2.R
+import com.example.week2.data.word.Word
+import com.example.week2.ui.adapter.WordListAdapter.WordViewHolder
 
 class WordListAdapter : ListAdapter<Word, WordViewHolder>(WORDS_COMPARATOR) {
 

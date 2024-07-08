@@ -1,8 +1,8 @@
-package com.example.week2
+package com.example.week2.data
 
 import android.app.Application
+import com.example.week2.R
 import com.kakao.sdk.common.KakaoSdk
-import com.kakao.sdk.v2.auth.BuildConfig
 
 class GlobalApplication : Application() {
     override fun onCreate() {

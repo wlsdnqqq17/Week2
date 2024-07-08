@@ -19,16 +19,13 @@ limitations under the License. -->
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <EditText
-        android:id="@+id/edit_meal_time"
+    <Spinner
+        android:id="@+id/spinner_meal_time"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:minHeight="@dimen/min_height"
-        android:fontFamily="sans-serif-light"
-        android:hint="식사 시간"
-        android:inputType="text"
         android:layout_margin="@dimen/big_padding"
-        android:textSize="18sp" />
+        android:textSize="18sp"/>
 
     <EditText
         android:id="@+id/edit_meal_name"

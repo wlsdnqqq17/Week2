@@ -1,21 +1,4 @@
-package com.example.week2
-
-/*
- * Copyright (C) 2017 Google Inc.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
+package com.example.week2.ui.adapter
 
 import android.view.LayoutInflater
 import android.view.View
@@ -24,7 +7,9 @@ import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.example.week2.MealListAdapter.MealViewHolder
+import com.example.week2.Meal
+import com.example.week2.R
+import com.example.week2.ui.adapter.MealListAdapter.MealViewHolder
 
 class MealListAdapter : ListAdapter<Meal, MealViewHolder>(MEALS_COMPARATOR) {
 
@@ -34,20 +19,22 @@ class MealListAdapter : ListAdapter<Meal, MealViewHolder>(MEALS_COMPARATOR) {
 
     override fun onBindViewHolder(holder: MealViewHolder, position: Int) {
         val current = getItem(position)
-        holder.bind(current.mealName)
+        holder.bind(current.mealName, current.price)
     }
 
     class MealViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        private val mealItemView: TextView = itemView.findViewById(R.id.textView)
+        private val mealItemView1: TextView = itemView.findViewById(R.id.textView1)
+        private val mealItemView2: TextView = itemView.findViewById(R.id.textView2)
 
-        fun bind(text: String?) {
-            mealItemView.text = text
+        fun bind(name: String?, cost: Int?) {
+            mealItemView1.text = name
+            mealItemView2.text = cost.toString()
         }
 
         companion object {
             fun create(parent: ViewGroup): MealViewHolder {
                 val view: View = LayoutInflater.from(parent.context)
-                    .inflate(R.layout.recyclerview_item, parent, false)
+                    .inflate(R.layout.meal_recyclerview_item, parent, false)
                 return MealViewHolder(view)
             }
         }

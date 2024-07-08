@@ -11,6 +11,11 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.week2.data.word.Word
+import com.example.week2.data.word.WordViewModel
+import com.example.week2.data.word.WordViewModelFactory
+import com.example.week2.data.word.WordsApplication
+import com.example.week2.ui.adapter.WordListAdapter
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class PotatoActivity : AppCompatActivity() {

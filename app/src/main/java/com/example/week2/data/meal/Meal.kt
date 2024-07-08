@@ -6,6 +6,7 @@ import androidx.room.Index
 import androidx.room.PrimaryKey
 
 
+
 @Entity(tableName = "meal_table", indices = [Index(value = ["date"])])
 data class Meal(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
