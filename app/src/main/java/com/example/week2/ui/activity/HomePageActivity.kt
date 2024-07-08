@@ -9,12 +9,18 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import com.example.week2.data.word.WordsApplication
 
 class HomePageActivity : AppCompatActivity() {
     private var backPressedOnce = false
     private val handler = Handler(Looper.getMainLooper())
     private val backPressedRunnable = Runnable { backPressedOnce = false }
+
+    private val mealViewModel: MealViewModel by viewModels {
+        MealViewModelFactory((application as WordsApplication).mealRepository)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,8 +36,11 @@ class HomePageActivity : AppCompatActivity() {
         val sharedPreferences: SharedPreferences = getSharedPreferences("Budget", MODE_PRIVATE)
         val savedInt = sharedPreferences.getInt("Budget", 0)
 
-        if (savedInt != 0) {
-            setBudgetButton.text = "0 / $savedInt"
+        mealViewModel.todayMealCostSum.observe(this) { costSum ->
+            if (savedInt != 0) {
+                setBudgetButton.text = "$costSum / $savedInt"
+            }
+
         }
 
         setBudgetButton.setOnClickListener {

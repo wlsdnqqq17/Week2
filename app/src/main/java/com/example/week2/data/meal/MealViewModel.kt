@@ -1,15 +1,18 @@
 package com.example.week2
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.asLiveData
+import androidx.lifecycle.liveData
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 
 class MealViewModel(private val repository: MealRepository) : ViewModel() {
 
     val todayMeals: LiveData<List<Meal>> = repository.todayMeals.asLiveData()
+    val todayMealCostSum: LiveData<Int> = repository.getTodayMealCostSum()
 
     fun insert(meal: Meal) = viewModelScope.launch {
         repository.insert(meal)

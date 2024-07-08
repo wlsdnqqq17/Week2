@@ -11,6 +11,6 @@ data class Meal(
     @ColumnInfo(name = "meal_time") val mealTime: String,
     @ColumnInfo(name = "meal_name") val mealName: String,
     @ColumnInfo(name = "price") val price: Int,
-    @ColumnInfo(name = "date") val date: Long,
+    @ColumnInfo(name = "date") val date: String,
     @ColumnInfo(name = "memo") val memo: String? = null
 )
