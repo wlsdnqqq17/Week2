@@ -63,7 +63,12 @@ class StoreActivity : AppCompatActivity() {
     private fun saveItemsToLocalDatabase(items: List<Item>) {
         CoroutineScope(Dispatchers.IO).launch {
             repository.deleteAll()
-            repository.insertAll(items)
+            val itemsWithDefaults = items.map { item ->
+                item.copy(
+                    imageUri = item.imageUri ?: ""
+                )
+            }
+            repository.insertAll(itemsWithDefaults)
             repository.allItems.collect { allItems ->
                 Log.d("ShopItems", "After Inserting: $allItems")
             }

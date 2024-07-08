@@ -9,6 +9,6 @@ data class Item(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
     @ColumnInfo(name = "name") val name: String,
     @ColumnInfo(name = "category") val category: String,
-    @ColumnInfo(name = "image_uri") val imageUri: String,
+    @ColumnInfo(name = "image_uri") val imageUri: String?,
     @ColumnInfo(name = "price") val price: Int
 )
