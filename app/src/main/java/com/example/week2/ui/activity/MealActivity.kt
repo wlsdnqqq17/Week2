@@ -15,7 +15,7 @@ import com.example.week2.data.word.WordsApplication
 import com.example.week2.ui.adapter.MealListAdapter
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
-class MealActivity : AppCompatActivity() {
+class MealActivity : AppCompatActivity(), MealListAdapter.OnItemClickListener {
 
     private val mealViewModel: MealViewModel by viewModels {
         MealViewModelFactory((application as WordsApplication).mealRepository)
@@ -35,7 +35,7 @@ class MealActivity : AppCompatActivity() {
 
         val recyclerView = findViewById<RecyclerView>(R.id.recyclerview)
 
-        val adapter = MealListAdapter()
+        val adapter = MealListAdapter(this)
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(this)
 
@@ -83,6 +83,13 @@ class MealActivity : AppCompatActivity() {
 
         mealViewModel.todayMeals.observe(this) { meals ->
             meals.let { adapter.submitList(it) }
+        }
+    }
+
+    override fun onItemClick(position: Int) {
+        val meal = mealViewModel.todayMeals.value?.get(position)
+        if (meal != null) {
+            Toast.makeText(this, "Clicked: ${meal.mealName}", Toast.LENGTH_SHORT).show()
         }
     }
 
