@@ -30,7 +30,9 @@ class HomePageActivity : AppCompatActivity() {
         val sharedPreferences: SharedPreferences = getSharedPreferences("Budget", MODE_PRIVATE)
         val savedInt = sharedPreferences.getInt("Budget", 0)
 
-        setBudgetButton.text = "0 / $savedInt"
+        if (savedInt != 0) {
+            setBudgetButton.text = "0 / $savedInt"
+        }
 
         setBudgetButton.setOnClickListener {
             val intent = Intent(this, SetBudgetActivity::class.java)
