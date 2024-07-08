@@ -1,5 +1,6 @@
 package com.example.week2
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -39,8 +40,13 @@ class FriendActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-        val myLoginId = "your_login_id_here"  // 본인의 로그인 아이디를 적절히 설정합니다.
-        getFriends(myLoginId)
+        val sharedPref = getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
+        val myLoginId = sharedPref.getString("login_id", null)
+        if (myLoginId != null) {
+            getFriends(myLoginId)
+        } else {
+            Log.d("myLoginId", "login 아이디가 없음")
+        }
     }
     override fun onSupportNavigateUp(): Boolean {
         onBackPressedDispatcher.onBackPressed()

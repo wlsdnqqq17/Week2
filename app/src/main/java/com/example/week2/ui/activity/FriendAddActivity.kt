@@ -1,6 +1,8 @@
 package com.example.week2
 
+import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
@@ -59,8 +61,14 @@ class FriendAddActivity : AppCompatActivity() {
                     resultId.text = "아이디: ${user?.login_id}"
                     resultNickname.text = "닉네임: ${user?.nickname}"
                     resultButton.setOnClickListener{
-                        sendFriendRequest(userId, user?.login_id) // 첫 번째 argument에 본인 userid 필요
-                        Toast.makeText(this@FriendAddActivity, "${user?.nickname}에게 친구 신청을 보냈습니다.",Toast.LENGTH_SHORT).show()
+                        val sharedPref = getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
+                        val myLoginId = sharedPref.getString("login_id", null)
+                        if (myLoginId != null) {
+                            sendFriendRequest(myLoginId, user?.login_id)
+                            Toast.makeText(this@FriendAddActivity, "${user?.nickname}에게 친구 신청을 보냈습니다.",Toast.LENGTH_SHORT).show()
+                        } else {
+                            Log.d("myLoginId", "login 아이디가 없음")
+                        }
                     }
                 } else {
                     searchResult.visibility = View.GONE
