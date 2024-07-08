@@ -43,7 +43,7 @@
         <activity android:name=".StoreActivity" />
         <activity android:name=".InfoActivity" />
         <activity android:name=".PotatoActivity" />
-        <activity android:name=".NextPageActivity"/>
+        <activity android:name=".HomeActivity"/>
         <activity android:name=".NewWordActivity"/>
         <activity android:name=".NewMealActivity"/>
     </application>

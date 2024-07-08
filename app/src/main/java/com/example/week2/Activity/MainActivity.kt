@@ -61,7 +61,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun sendUserToServer(loginId: String, nickname: String) {
-        val retrofit = RetrofitClient.getClient("http://10.0.2.2:8000/")  // Django 서버의 URL을 입력하세요.
+        val retrofit = RetrofitClient.getClient("http://10.0.2.2:8000/MyAvatar/")  // Django 서버의 URL을 입력하세요.
         val apiService = retrofit.create(ApiService::class.java)
         val user = User(loginId, nickname)
 
@@ -71,7 +71,7 @@ class MainActivity : AppCompatActivity() {
             override fun onResponse(call: Call<Void>, response: Response<Void>) {
                 if (response.isSuccessful) {
                     Log.i("ServerResponse", "User data sent successfully")
-                    val intent = Intent(this@MainActivity, NextPageActivity::class.java)
+                    val intent = Intent(this@MainActivity, HomeActivity::class.java)
                     startActivity(intent)
                 } else {
                     Log.e("ServerResponse", "Failed to send user data. Error code: ${response.code()}, Error body: ${response.errorBody()?.string()}")

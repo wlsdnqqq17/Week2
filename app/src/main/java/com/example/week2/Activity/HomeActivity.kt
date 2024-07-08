@@ -5,10 +5,10 @@ import android.os.Bundle
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 
-class NextPageActivity : AppCompatActivity() {
+class HomeActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.next_page)
+        setContentView(R.layout.home)
 
         val mealIcon: ImageView = findViewById(R.id.meal_icon)
         val inventoryIcon: ImageView = findViewById(R.id.inventory)
