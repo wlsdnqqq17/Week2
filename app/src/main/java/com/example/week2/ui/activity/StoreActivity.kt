@@ -14,7 +14,6 @@ import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-
 class StoreActivity : AppCompatActivity() {
     private lateinit var apiService: ApiService
     private lateinit var repository: ItemRepository
@@ -29,7 +28,7 @@ class StoreActivity : AppCompatActivity() {
         supportActionBar?.setDisplayShowTitleEnabled(false)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        apiService = ApiClient.getClient().create(ApiService::class.java)
+        apiService = RetrofitClient.getInstance().create(ApiService::class.java)
 
         val db = AppRoomDatabase.getDatabase(applicationContext, CoroutineScope(Dispatchers.IO))
         repository = ItemRepository(db.itemDao())
@@ -42,8 +41,7 @@ class StoreActivity : AppCompatActivity() {
 
 
     private fun fetchShopItems() {
-        val url = "https://run.mocky.io/v3/3b211402-549c-4d43-b22a-9437e3bbde58/"
-        apiService.getShopItems(url).enqueue(object : Callback<List<Item>> {
+        apiService.getShopItems().enqueue(object : Callback<List<Item>> {
             override fun onResponse(call: Call<List<Item>>, response: Response<List<Item>>) {
                 Log.d("ShopItems", "ShopItems: $response")
 
@@ -53,9 +51,10 @@ class StoreActivity : AppCompatActivity() {
                         Log.d("ShopItems", "ShopItems: $it")
                         saveItemsToLocalDatabase(it)
                     }
+                }else{
+                    Log.e("ShopItems", "응답 실패: ${response.code()}")
                 }
             }
-
             override fun onFailure(call: Call<List<Item>>, t: Throwable) {
                 Log.e("ShopItems", "실패!!", t)
             }
@@ -63,11 +62,8 @@ class StoreActivity : AppCompatActivity() {
     }
     private fun saveItemsToLocalDatabase(items: List<Item>) {
         CoroutineScope(Dispatchers.IO).launch {
-
             repository.deleteAll()
-
             repository.insertAll(items)
-
             repository.allItems.collect { allItems ->
                 Log.d("ShopItems", "After Inserting: $allItems")
             }
