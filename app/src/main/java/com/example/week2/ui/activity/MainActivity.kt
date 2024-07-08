@@ -17,8 +17,8 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         val kakaoLoginButton: ImageButton = findViewById(R.id.kakao_login_button)
         /*------For Test-------*/
-        val intent = Intent(this@MainActivity, HomePageActivity::class.java)
-        startActivity(intent)
+        //val intent = Intent(this@MainActivity, HomePageActivity::class.java)
+        //startActivity(intent)
         /*------For Test-------*/
         kakaoLoginButton.setOnClickListener {
             if (UserApiClient.instance.isKakaoTalkLoginAvailable(this)) {
