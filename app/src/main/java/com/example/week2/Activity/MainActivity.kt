@@ -12,7 +12,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        val intent = Intent(this, NextPageActivity::class.java)
+        val intent = Intent(this, HomePageActivity::class.java)
         startActivity(intent)
         val kakaoLoginButton: ImageButton = findViewById(R.id.kakao_login_button)
         kakaoLoginButton.setOnClickListener {
@@ -31,7 +31,7 @@ class MainActivity : AppCompatActivity() {
                             } else if (tokenInfo != null) {
                                 Log.i("KakaoLogin", "토큰 정보: ${tokenInfo.id}")
                                 // 다음 페이지로 이동
-                                val intent = Intent(this, NextPageActivity::class.java)
+                                val intent = Intent(this, HomePageActivity::class.java)
                                 startActivity(intent)
                             }
                         }
@@ -52,7 +52,7 @@ class MainActivity : AppCompatActivity() {
                             } else if (tokenInfo != null) {
                                 Log.i("KakaoLogin", "토큰 정보: ${tokenInfo.id}")
                                 // 다음 페이지로 이동
-                                val intent = Intent(this, NextPageActivity::class.java)
+                                val intent = Intent(this, HomePageActivity::class.java)
                                 startActivity(intent)
                             }
                         }

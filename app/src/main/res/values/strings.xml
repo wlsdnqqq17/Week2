@@ -12,6 +12,7 @@
     <string name="meal_activity">Meal Activity</string>
     <string name="action_settings">Settings</string>
     <string name="hint_word">Word…</string>
+    <string name="hint_budget">하루 식비 예산을 입력하세요.</string>
     <string name="button_save">Save</string>
     <string name="word_empty_not_saved">Word not saved because it is empty.</string>
     <string name="meal_empty_not_saved">식비 지출이 기록되지 않았습니다.</string>

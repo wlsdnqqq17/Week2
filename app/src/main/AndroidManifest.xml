@@ -43,9 +43,11 @@
         <activity android:name=".StoreActivity" />
         <activity android:name=".InfoActivity" />
         <activity android:name=".PotatoActivity" />
-        <activity android:name=".NextPageActivity"/>
+        <activity android:name=".HomePageActivity"/>
         <activity android:name=".NewWordActivity"/>
         <activity android:name=".NewMealActivity"/>
+        <activity android:name=".SetBudgetActivity"/>
+
     </application>
 
     <uses-permission android:name="android.permission.INTERNET" />
