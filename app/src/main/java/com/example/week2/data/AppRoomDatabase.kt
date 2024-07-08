@@ -1,4 +1,4 @@
-package com.example.week2
+package com.example.week2.data
 
 /*
  * Copyright (C) 2017 Google Inc.
@@ -21,6 +21,10 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
+import com.example.week2.Meal
+import com.example.week2.MealDao
+import com.example.week2.data.word.Word
+import com.example.week2.data.word.WordDao
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

@@ -1,4 +1,4 @@
-package com.example.week2
+package com.example.week2.data.word
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity

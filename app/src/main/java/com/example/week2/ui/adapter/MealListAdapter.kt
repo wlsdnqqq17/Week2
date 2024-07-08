@@ -1,4 +1,4 @@
-package com.example.week2
+package com.example.week2.ui.adapter
 
 import android.view.LayoutInflater
 import android.view.View
@@ -7,7 +7,9 @@ import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.example.week2.MealListAdapter.MealViewHolder
+import com.example.week2.Meal
+import com.example.week2.R
+import com.example.week2.ui.adapter.MealListAdapter.MealViewHolder
 
 class MealListAdapter : ListAdapter<Meal, MealViewHolder>(MEALS_COMPARATOR) {
 
