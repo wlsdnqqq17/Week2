@@ -47,6 +47,8 @@
         <activity android:name=".NewWordActivity"/>
         <activity android:name=".NewMealActivity"/>
         <activity android:name=".SetBudgetActivity"/>
+        <activity android:name=".FriendActivity"/>
+        <activity android:name="FriendAddActivity"/>
 
     </application>
 
