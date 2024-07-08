@@ -1,21 +1,32 @@
 package com.example.week2
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.SharedPreferences
+import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.widget.ImageView
+import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
+import com.example.week2.data.meal.WordsApplication
 
 class HomePageActivity : AppCompatActivity() {
     private var backPressedOnce = false
     private val handler = Handler(Looper.getMainLooper())
     private val backPressedRunnable = Runnable { backPressedOnce = false }
 
+    private val mealViewModel: MealViewModel by viewModels {
+        MealViewModelFactory((application as WordsApplication).mealRepository)
+    }
+
+    @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_homepage)
@@ -27,10 +38,28 @@ class HomePageActivity : AppCompatActivity() {
         val friendIcon: ImageView = findViewById(R.id.friend_icon)
         val potatoIcon: ImageView = findViewById(R.id.potato_icon)
         val infoIcon: ImageView = findViewById(R.id.info)
+        val progressBar: ProgressBar = findViewById(R.id.progress_bar)
         val sharedPreferences: SharedPreferences = getSharedPreferences("Budget", MODE_PRIVATE)
         val savedInt = sharedPreferences.getInt("Budget", 0)
 
-        setBudgetButton.text = "0 / $savedInt"
+        mealViewModel.todayMealCostSum.observe(this) { costSum ->
+            if (savedInt != 0) {
+                setBudgetButton.text = "$costSum / $savedInt"
+                val progress = ((costSum.toDouble() / savedInt) * 100).toInt()
+                progressBar.progress = progress
+
+                if (costSum >= savedInt) {
+                    setBudgetButton.text = "예산 초과!"
+                    progressBar.progress = 100
+                    setBudgetButton.setTextColor(Color.RED)
+                    progressBar.progressDrawable = ContextCompat.getDrawable(this, R.drawable.progress_bar_over)
+                } else {
+                    setBudgetButton.setTextColor(Color.BLACK)
+                    progressBar.progressDrawable = ContextCompat.getDrawable(this, R.drawable.progress_bar_normal)
+                }
+            }
+        }
+
 
         setBudgetButton.setOnClickListener {
             val intent = Intent(this, SetBudgetActivity::class.java)
