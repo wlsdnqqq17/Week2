@@ -1,74 +1,39 @@
 package com.example.week2
 
-import android.app.Activity
-import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
-import android.widget.Toast
-import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.activity.viewModels
+import android.widget.Button
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.example.week2.data.word.Word
-import com.example.week2.data.word.WordViewModel
-import com.example.week2.data.word.WordViewModelFactory
-import com.example.week2.data.word.WordsApplication
-import com.example.week2.ui.adapter.WordListAdapter
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class PotatoActivity : AppCompatActivity() {
-
-    private val wordViewModel: WordViewModel by viewModels {
-        WordViewModelFactory((application as WordsApplication).wordRepository)
-    }
-
-    private lateinit var newWordActivityLauncher: ActivityResultLauncher<Intent>
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_potato)
+
+        val sharedPreferences: SharedPreferences = getSharedPreferences("Potato", MODE_PRIVATE)
+        val potatoCount: TextView = findViewById(R.id.potato_count)
+        val savedInt = sharedPreferences.getInt("Potato", 0)
+
+        potatoCount.text = "$savedInt"
+
+        val button = findViewById<Button>(R.id.receive_button)
+        button.setOnClickListener {
+            val currentCount = sharedPreferences.getInt("Potato", 0)
+            val newCount = currentCount + 1
+            val editor: SharedPreferences.Editor = sharedPreferences.edit()
+            editor.putInt("Potato", newCount)
+            editor.apply()
+            potatoCount.text = "$newCount"
+        }
 
         val toolbar: Toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
 
         supportActionBar?.setDisplayShowTitleEnabled(false)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-
-        val recyclerView = findViewById<RecyclerView>(R.id.recyclerview)
-        val adapter = WordListAdapter()
-        recyclerView.adapter = adapter
-        recyclerView.layoutManager = LinearLayoutManager(this)
-
-        val fab = findViewById<FloatingActionButton>(R.id.fab)
-        fab.setOnClickListener {
-            val intent = Intent(this@PotatoActivity, NewWordActivity::class.java)
-            newWordActivityLauncher.launch(intent)
-        }
-
-        newWordActivityLauncher = registerForActivityResult(
-            ActivityResultContracts.StartActivityForResult()
-        ) { result ->
-            if (result.resultCode == Activity.RESULT_OK) {
-                result.data?.getStringExtra(NewWordActivity.EXTRA_REPLY)?.let { reply ->
-                    if (reply.isNotEmpty()) {
-                        val word = Word(reply)
-                        wordViewModel.insert(word)
-                    }
-                }
-            } else {
-                Toast.makeText(
-                    applicationContext,
-                    R.string.word_empty_not_saved,
-                    Toast.LENGTH_LONG
-                ).show()
-            }
-        }
-
-        wordViewModel.allWords.observe(this) { words ->
-            words.let { adapter.submitList(it) }
-        }
+        //supportActionBar?.setDisplayShowHomeEnabled(true)
     }
 
     override fun onSupportNavigateUp(): Boolean {

@@ -1,4 +1,4 @@
-package com.example.week2.data.word
+package com.example.week2.data.meal
 
 import android.app.Application
 import com.example.week2.data.AppRoomDatabase
@@ -15,7 +15,7 @@ class WordsApplication : Application() {
     // Using by lazy so the database and the repository are only created when they're needed
     // rather than when the application starts
     val database by lazy { AppRoomDatabase.getDatabase(this, applicationScope) }
-    val wordRepository by lazy { WordRepository(database.wordDao()) }
+    //val wordRepository by lazy { WordRepository(database.wordDao()) }
     val mealRepository by lazy { MealRepository(database.mealDao()) }
 
     override fun onCreate() {
