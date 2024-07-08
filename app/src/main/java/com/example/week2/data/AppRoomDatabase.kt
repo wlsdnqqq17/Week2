@@ -71,8 +71,10 @@ abstract class AppRoomDatabase : RoomDatabase() {
 
             var meal = Meal( mealTime = "점심", mealName = "피자", price = 5000, date = "2024-07-08", memo = "")
             mealDao.insert(meal)
-            var item = Item( name = "벗기", category = "옷", imageUri = "", price = 3)
-            itemDao.insert(item)
+            var item1 = Item( name = "벗기", category = "옷", imageUri = "", price = 3)
+            itemDao.insert(item1)
+            var item2 = Item( name = "거위", category = "배경", imageUri = "", price = 2)
+            itemDao.insert(item2)
         }
     }
 }

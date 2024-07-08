@@ -6,6 +6,7 @@ import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Query
+import retrofit2.http.Url
 
 data class User(
     val login_id: String,
@@ -25,7 +26,12 @@ interface ApiService {
     @GET("search_user/")
     fun searchUser(@Query("loginId") login_id: String): Call<UserResponse>
 
-    @GET("shop/items/")
-    fun getShopItems(): Call<List<Item>>
+    //@GET("shop/items/")
+    //fun getShopItems(): Call<List<Item>>
+
+    @GET
+    fun getShopItems(@Url url: String): Call<List<Item>>
+
+
 }
 
