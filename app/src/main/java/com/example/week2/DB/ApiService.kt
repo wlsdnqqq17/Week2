@@ -48,5 +48,12 @@ interface ApiService {
 
     @GET("get_friends/{user_id}/")
     fun getFriends(@Path("user_id") userId: String): Call<List<User>>
+
+    @GET("get_friend_requests/{user_id}/")
+    fun getFriendRequests(@Path("user_id") userId: String): Call<List<User>>
+
+    @POST("accept_friend_request/")
+    fun acceptFriendRequest(@Body request: FriendRequest): Call<Void>
+
 }
 
