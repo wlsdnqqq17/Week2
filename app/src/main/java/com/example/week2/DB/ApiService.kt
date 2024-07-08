@@ -19,6 +19,14 @@ data class UserResponse (
     val data: User?
 )
 
+data class Item(
+    val id: Int,
+    val name: String,
+    val category: String,
+    val item_image_url: String,
+    val price: Int
+)
+
 interface ApiService {
     @POST("save_kakao_user/")
     fun saveKakaoUser(@Body user: User): Call<Void>
@@ -26,12 +34,7 @@ interface ApiService {
     @GET("search_user/")
     fun searchUser(@Query("loginId") login_id: String): Call<UserResponse>
 
-    //@GET("shop/items/")
-    //fun getShopItems(): Call<List<Item>>
-
-    @GET
-    fun getShopItems(@Url url: String): Call<List<Item>>
-
-
+    @GET("get_items/")
+    fun getShopItems(): Call<List<Item>>
 }
 
