@@ -20,7 +20,7 @@ class MealActivity : AppCompatActivity(), MealListAdapter.OnItemClickListener {
     private val mealViewModel: MealViewModel by viewModels {
         MealViewModelFactory((application as WordsApplication).mealRepository)
     }
-    val adapter = MealListAdapter(this)
+    private val adapter = MealListAdapter(this)
     private lateinit var newMealActivityLauncher: ActivityResultLauncher<Intent>
     private lateinit var editMealActivityLauncher: ActivityResultLauncher<Intent>
 
@@ -28,99 +28,77 @@ class MealActivity : AppCompatActivity(), MealListAdapter.OnItemClickListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_meal)
 
+        setupToolbar()
+        setupRecyclerView()
+        setupFab()
+        setupActivityLaunchers()
+        observeViewModel()
+    }
+
+    private fun setupToolbar() {
         val toolbar: Toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
-
         supportActionBar?.setDisplayShowTitleEnabled(false)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+    }
 
-        val recyclerView = findViewById<RecyclerView>(R.id.recyclerview)
-
-        //val adapter = MealListAdapter(this)
+    private fun setupRecyclerView() {
+        val recyclerView: RecyclerView = findViewById(R.id.recyclerview)
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(this)
+    }
 
-        val fab = findViewById<FloatingActionButton>(R.id.fab)
+    private fun setupFab() {
+        val fab: FloatingActionButton = findViewById(R.id.fab)
         fab.setOnClickListener {
             val intent = Intent(this@MealActivity, NewMealActivity::class.java)
             newMealActivityLauncher.launch(intent)
         }
+    }
 
+    private fun setupActivityLaunchers() {
         newMealActivityLauncher = registerForActivityResult(
             ActivityResultContracts.StartActivityForResult()
-        ) { result ->
-            if (result.resultCode == Activity.RESULT_OK) {
-                val data = result.data
-                if (data != null) {
-                    val mealTime = data.getStringExtra(NewMealActivity.EXTRA_MEAL_TIME) ?: ""
-                    val mealName = data.getStringExtra(NewMealActivity.EXTRA_MEAL_NAME) ?: ""
-                    val price = data.getIntExtra(NewMealActivity.EXTRA_PRICE, 0)
-                    val date = data.getStringExtra(NewMealActivity.EXTRA_DATE) ?: ""
-                    val memo = data.getStringExtra(NewMealActivity.EXTRA_MEMO)
-
-                    val meal = Meal(
-                        mealTime = mealTime,
-                        mealName = mealName,
-                        price = price,
-                        date = date,
-                        memo = memo
-                    )
-                    mealViewModel.insert(meal)
-                } else {
-                    Toast.makeText(
-                        applicationContext,
-                        R.string.meal_empty_not_saved,
-                        Toast.LENGTH_LONG
-                    ).show()
-                }
-            } else {
-                Toast.makeText(
-                    applicationContext,
-                    R.string.meal_empty_not_saved,
-                    Toast.LENGTH_LONG
-                ).show()
-            }
-        }
+        ) { result -> handleNewMealActivityResult(result.resultCode, result.data) }
 
         editMealActivityLauncher = registerForActivityResult(
             ActivityResultContracts.StartActivityForResult()
-        ) { result ->
-            if (result.resultCode == Activity.RESULT_OK) {
-                val data = result.data
-                if (data != null) {
-                    val mealId = data.getIntExtra(EditMealActivity.EXTRA_MEAL_ID, -1)
-                    val mealTime = data.getStringExtra(EditMealActivity.EXTRA_MEAL_TIME) ?: ""
-                    val mealName = data.getStringExtra(EditMealActivity.EXTRA_MEAL_NAME) ?: ""
-                    val price = data.getIntExtra(EditMealActivity.EXTRA_PRICE, 0)
-                    val date = data.getStringExtra(EditMealActivity.EXTRA_DATE) ?: ""
-                    val memo = data.getStringExtra(EditMealActivity.EXTRA_MEMO)
-                    val meal = Meal(
-                        id = mealId,
-                        mealTime = mealTime,
-                        mealName = mealName,
-                        price = price,
-                        date = date,
-                        memo = memo
-                    )
-                    mealViewModel.update(meal)
+        ) { result -> handleEditMealActivityResult(result.resultCode, result.data) }
+    }
 
-                } else {
-                    Toast.makeText(
-                        applicationContext,
-                        R.string.meal_empty_not_saved,
-                        Toast.LENGTH_LONG
-                    ).show()
-                }
-            } else {
-                Toast.makeText(
-                    applicationContext,
-                    R.string.meal_empty_not_saved,
-                    Toast.LENGTH_LONG
-                ).show()
-            }
+    private fun handleNewMealActivityResult(resultCode: Int, data: Intent?) {
+        if (resultCode == Activity.RESULT_OK && data != null) {
+            val meal = createMealFromIntent(data)
+            mealViewModel.insert(meal)
+        } else {
+            showToast(R.string.meal_empty_not_saved)
         }
+    }
 
+    private fun handleEditMealActivityResult(resultCode: Int, data: Intent?) {
+        if (resultCode == Activity.RESULT_OK && data != null) {
+            val meal = createMealFromIntent(data, data.getIntExtra(EditMealActivity.EXTRA_MEAL_ID, -1))
+            mealViewModel.update(meal)
+        } else {
+            showToast(R.string.meal_empty_not_saved)
+        }
+    }
 
+    private fun createMealFromIntent(data: Intent, id: Int = 0): Meal {
+        val mealTime = data.getStringExtra(NewMealActivity.EXTRA_MEAL_TIME) ?: ""
+        val mealName = data.getStringExtra(NewMealActivity.EXTRA_MEAL_NAME) ?: ""
+        val price = data.getIntExtra(NewMealActivity.EXTRA_PRICE, 0)
+        val date = data.getStringExtra(NewMealActivity.EXTRA_DATE) ?: ""
+        val memo = data.getStringExtra(NewMealActivity.EXTRA_MEMO)
+
+        return Meal(id, mealTime, mealName, price, date, memo)
+    }
+
+    private fun showToast(messageResId: Int) {
+        Toast.makeText(applicationContext, messageResId, Toast.LENGTH_LONG).show()
+    }
+
+    private fun observeViewModel() {
         mealViewModel.todayMeals.observe(this) { meals ->
             meals.let { adapter.submitList(it) }
         }
@@ -129,7 +107,7 @@ class MealActivity : AppCompatActivity(), MealListAdapter.OnItemClickListener {
     override fun onItemClick(position: Int) {
         val selectedMeal = adapter.currentList[position]
         val intent = Intent(this@MealActivity, EditMealActivity::class.java).apply {
-            putExtra(EditMealActivity.EXTRA_MEAL_ID, selectedMeal.id) // mealId 추가
+            putExtra(EditMealActivity.EXTRA_MEAL_ID, selectedMeal.id)
             putExtra(EditMealActivity.EXTRA_MEAL_TIME, selectedMeal.mealTime)
             putExtra(EditMealActivity.EXTRA_MEAL_NAME, selectedMeal.mealName)
             putExtra(EditMealActivity.EXTRA_PRICE, selectedMeal.price)
