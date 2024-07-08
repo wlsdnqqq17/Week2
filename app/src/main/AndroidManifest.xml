@@ -47,6 +47,7 @@
         <activity android:name=".NewWordActivity"/>
         <activity android:name=".NewMealActivity"/>
         <activity android:name=".SetBudgetActivity"/>
+        <activity android:name=".EditMealActivity"/>
 
     </application>
 
