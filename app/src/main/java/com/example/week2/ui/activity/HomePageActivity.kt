@@ -48,7 +48,7 @@ class HomePageActivity : AppCompatActivity() {
                 val progress = ((costSum.toDouble() / savedInt) * 100).toInt()
                 progressBar.progress = progress
 
-                if (costSum >= savedInt) {
+                if (costSum > savedInt) {
                     setBudgetButton.text = "예산 초과!"
                     progressBar.progress = 100
                     setBudgetButton.setTextColor(Color.RED)

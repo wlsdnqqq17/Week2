@@ -1,5 +1,6 @@
 package com.example.week2
 
+import com.example.week2.data.item.Item
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -23,5 +24,8 @@ interface ApiService {
 
     @GET("search_user/")
     fun searchUser(@Query("loginId") login_id: String): Call<UserResponse>
+
+    @GET("shop/items/")
+    fun getShopItems(): Call<List<Item>>
 }
 
