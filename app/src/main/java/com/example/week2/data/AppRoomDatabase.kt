@@ -8,16 +8,14 @@ import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.example.week2.Meal
 import com.example.week2.MealDao
-import com.example.week2.data.word.Word
-import com.example.week2.data.word.WordDao
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-@Database(entities = [Word::class, Meal::class], version = 1)
+@Database(entities = [Meal::class], version = 1)
 abstract class AppRoomDatabase : RoomDatabase() {
 
-    abstract fun wordDao(): WordDao
+    //abstract fun wordDao(): WordDao
     abstract fun mealDao(): MealDao
 
     companion object {
@@ -52,7 +50,7 @@ abstract class AppRoomDatabase : RoomDatabase() {
                 super.onCreate(db)
                 INSTANCE?.let { database ->
                     scope.launch(Dispatchers.IO) {
-                        populateDatabase(database.wordDao(), database.mealDao())
+                        populateDatabase(database.mealDao())
                     }
                 }
             }
@@ -62,15 +60,15 @@ abstract class AppRoomDatabase : RoomDatabase() {
          * Populate the database in a new coroutine.
          * If you want to start with more words, just add them.
          */
-        suspend fun populateDatabase(wordDao: WordDao, mealDao: MealDao) {
+        suspend fun populateDatabase(mealDao: MealDao) {
             // Start the app with a clean database every time.
             // Not needed if you only populate on creation.
-            wordDao.deleteAll()
-
-            var word = Word("Hello")
-            wordDao.insert(word)
-            word = Word("World!")
-            wordDao.insert(word)
+//            wordDao.deleteAll()
+//
+//            var word = Word("Hello")
+//            wordDao.insert(word)
+//            word = Word("World!")
+//            wordDao.insert(word)
 
             var meal = Meal( mealTime = "ㅇ", mealName = "치킨", price = 5000, date = "2024-07-08", memo = "")
             mealDao.insert(meal)

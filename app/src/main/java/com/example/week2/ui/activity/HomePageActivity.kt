@@ -15,7 +15,7 @@ import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import com.example.week2.data.word.WordsApplication
+import com.example.week2.data.meal.WordsApplication
 
 class HomePageActivity : AppCompatActivity() {
     private var backPressedOnce = false
