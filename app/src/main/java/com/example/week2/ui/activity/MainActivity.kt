@@ -35,7 +35,7 @@ class MainActivity : AppCompatActivity() {
                                 val loginId = user.id.toString()
                                 val nickname = user.kakaoAccount?.profile?.nickname
                                 if (nickname != null) {
-                                    saveLoginId(loginId)
+                                    saveUserInfo(loginId, nickname)
                                     sendUserToServer(loginId, nickname)
                                 }
                             }
@@ -55,7 +55,7 @@ class MainActivity : AppCompatActivity() {
                                 val loginId = user.id.toString()
                                 val nickname = user.kakaoAccount?.profile?.nickname
                                 if (nickname != null) {
-                                    saveLoginId(loginId)
+                                    saveUserInfo(loginId, nickname)
                                     sendUserToServer(loginId, nickname)
                                 }
                             }
@@ -66,10 +66,11 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun saveLoginId(loginId: String) {
+    private fun saveUserInfo(loginId: String, nickname: String) {
         val sharedPref = getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
         with(sharedPref.edit()) {
             putString("login_id", loginId)
+            putString("nickname", nickname)
             apply()
         }
     }

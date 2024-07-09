@@ -65,7 +65,7 @@ class FriendAddActivity : AppCompatActivity() {
                         val myLoginId = sharedPref.getString("login_id", null)
                         if (myLoginId != null) {
                             sendFriendRequest(myLoginId, user?.login_id)
-                            Toast.makeText(this@FriendAddActivity, "${user?.nickname}에게 친구 신청을 보냈습니다.",Toast.LENGTH_SHORT).show()
+                            Toast.makeText(this@FriendAddActivity, "${user?.nickname}에게 팔로우 신청을 보냈습니다.",Toast.LENGTH_SHORT).show()
                         } else {
                             Log.d("myLoginId", "login 아이디가 없음")
                         }
