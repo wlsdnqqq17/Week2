@@ -8,6 +8,9 @@ interface ItemDao {
     @Query("SELECT * FROM item_table")
     fun getAllItems(): Flow<List<Item>>
 
+    @Query("SELECT * FROM item_table WHERE id = :itemId")
+    suspend fun getItemById(itemId: Int): Item?
+
     @Insert
     suspend fun insert(item: Item)
 
@@ -16,6 +19,9 @@ interface ItemDao {
 
     @Update
     suspend fun update(item: Item)
+
+    @Update
+    suspend fun updateAll(items: List<Item>)
 
     @Delete
     suspend fun delete(item: Item)

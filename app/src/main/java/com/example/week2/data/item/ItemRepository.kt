@@ -13,25 +13,19 @@ class ItemRepository(private val itemDao: ItemDao) {
     }
 
     @WorkerThread
-    suspend fun insertAll(items: List<Item>) {
-        itemDao.insertAll(items)
-    }
-
-    @WorkerThread
     suspend fun update(item: Item) {
         itemDao.update(item)
     }
 
     @WorkerThread
-    suspend fun delete(item: Item) {
-        itemDao.delete(item)
+    suspend fun updateAll(items: List<Item>) {
+        itemDao.updateAll(items)
     }
 
-    suspend fun deleteAll() {
-        itemDao.deleteAll()
+
+    @WorkerThread
+    suspend fun getItemById(itemId: Int): Item? {
+        return itemDao.getItemById(itemId)
     }
 
-    suspend fun insertItems(items: List<Item>) {
-        itemDao.insertItems(items)
-    }
 }
