@@ -19,6 +19,7 @@ import com.example.week2.data.meal.WordsApplication
 import com.example.week2.ui.adapter.ItemListAdapter
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
@@ -103,29 +104,37 @@ class StoreActivity : AppCompatActivity(), ItemListAdapter.OnItemClickListener {
 
     private fun updateLocalDatabase(items: List<Item>) {
         CoroutineScope(Dispatchers.IO).launch {
-            val existingItems = mutableListOf<Item>()
-            repository.allItems.collect {
-                existingItems.addAll(it)
-                Log.d("ShopItems", "Collected existing items: $existingItems")
+            val existingItems = repository.allItems.first()
+            Log.d("ShopItems", "Collected existing items: $existingItems")
 
-                val itemsToUpdate = items.map { newItem ->
-                    val existingItem = existingItems.find { it.id == newItem.id }
-                    if (existingItem != null) {
-                        newItem.copy(isPurchased = existingItem.isPurchased)
-                    } else {
-                        newItem
-                    }
+            val itemsToUpdate = items.map { newItem ->
+                val existingItem = existingItems.find { it.id == newItem.id }
+                if (existingItem != null) {
+                    newItem.copy(isPurchased = existingItem.isPurchased)
+                } else {
+                    newItem
                 }
+            }
 
-                repository.updateAll(itemsToUpdate)
+            val newItems = itemsToUpdate.filter { newItem ->
+                existingItems.none { it.id == newItem.id }
+            }
 
-                repository.allItems.collect { allItems ->
-                    Log.d("ShopItems", "After Updating: $allItems")
-                }
+            val itemsToDelete = existingItems.filter { existingItem ->
+                items.none { it.id == existingItem.id }
+            }
+
+            // 데이터베이스 업데이트
+            repository.insertAll(newItems)
+            repository.updateAll(itemsToUpdate)
+            repository.deleteAll(itemsToDelete)
+
+            // 업데이트 후 모든 데이터를 로그로 출력합니다.
+            repository.allItems.collect { allItems ->
+                Log.d("ShopItems", "After Updating: $allItems")
             }
         }
     }
-
     override fun onItemClick(position: Int) {
         val selectedItem = adapter.currentList[position]
         showPurchaseDialog(selectedItem)
