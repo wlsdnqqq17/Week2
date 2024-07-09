@@ -71,9 +71,9 @@ abstract class AppRoomDatabase : RoomDatabase() {
 
             val meal = Meal( mealTime = "점심", mealName = "피자", price = 5000, date = "2024-07-09", memo = "")
             mealDao.insert(meal)
-            val item1 = Item( name = "중절모", category = "모자", imageUri = "", price = 3, isPurchased = true)
+            val item1 = Item( name = "중절모", category = "모자", item_image_url = "", price = 3, isPurchased = true)
             itemDao.insert(item1)
-            val item2 = Item( name = "벗기", category = "벗기", imageUri = "", price = 2)
+            val item2 = Item( name = "벗기", category = "벗기", item_image_url = "", price = 2)
             itemDao.insert(item2)
         }
     }

@@ -22,6 +22,10 @@ class ItemRepository(private val itemDao: ItemDao) {
         itemDao.updateAll(items)
     }
 
+    @WorkerThread
+    suspend fun insertAll(items: List<Item>) {
+        itemDao.insertAll(items)
+    }
 
     @WorkerThread
     suspend fun getItemById(itemId: Int): Item? {

@@ -48,7 +48,7 @@ class StoreActivity : AppCompatActivity(), ItemListAdapter.OnItemClickListener {
 
         setupToolbar()
         setupRecyclerView()
-        apiService = ApiClient.getClient().create(ApiService::class.java)
+        apiService = RetrofitClient.getInstance().create(ApiService::class.java)
 
         val db = AppRoomDatabase.getDatabase(applicationContext, CoroutineScope(Dispatchers.IO))
         repository = ItemRepository(db.itemDao())
@@ -77,8 +77,7 @@ class StoreActivity : AppCompatActivity(), ItemListAdapter.OnItemClickListener {
     }
 
     private fun fetchShopItems() {
-        val url = "https://run.mocky.io/v3/3b211402-549c-4d43-b22a-9437e3bbde58/"
-        apiService.getShopItems(url).enqueue(object : Callback<List<Item>> {
+        apiService.getShopItems().enqueue(object : Callback<List<Item>> {
             override fun onResponse(call: Call<List<Item>>, response: Response<List<Item>>) {
                 if (response.isSuccessful) {
                     val items = response.body()
@@ -108,17 +107,25 @@ class StoreActivity : AppCompatActivity(), ItemListAdapter.OnItemClickListener {
                 existingItems.addAll(it)
                 Log.d("ShopItems", "Collected existing items: $existingItems")
 
-                val itemsToUpdate = items.map { newItem ->
+                val itemsToUpdate = mutableListOf<Item>()
+                val itemsToInsert = mutableListOf<Item>()
+
+                items.forEach() { newItem ->
                     val existingItem = existingItems.find { it.id == newItem.id }
                     if (existingItem != null) {
-                        newItem.copy(isPurchased = existingItem.isPurchased)
+                        itemsToUpdate.add(newItem.copy(isPurchased = existingItem.isPurchased))
                     } else {
-                        newItem
+                        itemsToInsert.add(newItem)
                     }
                 }
-
-                repository.updateAll(itemsToUpdate)
-
+                if (itemsToUpdate.isNotEmpty()) {
+                    repository.updateAll(itemsToUpdate)
+                    Log.d("ShopItems", "Updated items: $itemsToUpdate")
+                }
+                if (itemsToInsert.isNotEmpty()) {
+                    repository.insertAll(itemsToInsert)
+                    Log.d("ShopItems", "Inserted items: $itemsToInsert")
+                }
                 repository.allItems.collect { allItems ->
                     Log.d("ShopItems", "After Updating: $allItems")
                 }
