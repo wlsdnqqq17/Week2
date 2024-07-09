@@ -24,7 +24,7 @@ class ItemBgActivity : AppCompatActivity(), ItemListAdapter.OnItemClickListener 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_inventory)
-        sharedPreferences = getSharedPreferences("background", MODE_PRIVATE)
+        sharedPreferences = getSharedPreferences("Bg", MODE_PRIVATE)
 
         setupToolbar()
         setupRecyclerView()
@@ -53,7 +53,7 @@ class ItemBgActivity : AppCompatActivity(), ItemListAdapter.OnItemClickListener 
     }
 
     private fun observeViewModel() {
-        itemViewModel.getPurchasedItemsByCategory("bg").observe(this) { items ->
+        itemViewModel.getPurchasedItemsByCategory("background").observe(this) { items ->
             items.let { adapter.submitList(it) }
         }
     }
