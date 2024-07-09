@@ -1,5 +1,6 @@
 package com.example.week2
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -17,8 +18,8 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         val kakaoLoginButton: ImageButton = findViewById(R.id.kakao_login_button)
         /*------For Test-------*/
-        val intent = Intent(this@MainActivity, HomePageActivity::class.java)
-        startActivity(intent)
+        //val intent = Intent(this@MainActivity, HomePageActivity::class.java)
+        //startActivity(intent)
         /*------For Test-------*/
         kakaoLoginButton.setOnClickListener {
             if (UserApiClient.instance.isKakaoTalkLoginAvailable(this)) {
@@ -34,6 +35,7 @@ class MainActivity : AppCompatActivity() {
                                 val loginId = user.id.toString()
                                 val nickname = user.kakaoAccount?.profile?.nickname
                                 if (nickname != null) {
+                                    saveLoginId(loginId)
                                     sendUserToServer(loginId, nickname)
                                 }
                             }
@@ -53,6 +55,7 @@ class MainActivity : AppCompatActivity() {
                                 val loginId = user.id.toString()
                                 val nickname = user.kakaoAccount?.profile?.nickname
                                 if (nickname != null) {
+                                    saveLoginId(loginId)
                                     sendUserToServer(loginId, nickname)
                                 }
                             }
@@ -60,6 +63,14 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
             }
+        }
+    }
+
+    private fun saveLoginId(loginId: String) {
+        val sharedPref = getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
+        with(sharedPref.edit()) {
+            putString("login_id", loginId)
+            apply()
         }
     }
 

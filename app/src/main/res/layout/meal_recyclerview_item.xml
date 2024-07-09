@@ -5,22 +5,13 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:background="@android:color/white"
-        android:contentDescription="'"
-        android:src="@drawable/naked" />
-
     <TextView
         android:id="@+id/textView1"
         style="@style/word_title"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:background="@android:color/white"/>
+        android:background="@android:color/holo_orange_light"/>
 
     <TextView
         android:id="@+id/textView2"
@@ -28,5 +19,5 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:background="@android:color/white"/>
+        android:background="@android:color/holo_orange_light"/>
 </LinearLayout>
