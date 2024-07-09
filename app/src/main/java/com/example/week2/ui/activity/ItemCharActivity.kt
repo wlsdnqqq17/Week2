@@ -1,6 +1,8 @@
 package com.example.week2
 
+import android.content.SharedPreferences
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
@@ -17,11 +19,13 @@ class ItemCharActivity : AppCompatActivity(), ItemListAdapter.OnItemClickListene
         ItemViewModelFactory((application as WordsApplication).itemRepository)
     }
     private val adapter = ItemListAdapter(this)
+    private lateinit var sharedPreferences: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_inventory)
 
+        sharedPreferences = getSharedPreferences("Char", MODE_PRIVATE)
         setupToolbar()
         setupRecyclerView()
 
@@ -55,5 +59,14 @@ class ItemCharActivity : AppCompatActivity(), ItemListAdapter.OnItemClickListene
     }
 
     override fun onItemClick(position: Int) {
+        val selectedItem = adapter.currentList[position]
+        saveHatIdToSharedPreferences(selectedItem.id)
+    }
+    private fun saveHatIdToSharedPreferences(hatId: Int) {
+        val editor = sharedPreferences.edit()
+        editor.putInt("Char", hatId)
+        editor.apply()
+        val savedHatId = sharedPreferences.getInt("Char", -1)
+        Log.d("ItemHatActivity", "Saved Hat ID: $savedHatId")
     }
 }

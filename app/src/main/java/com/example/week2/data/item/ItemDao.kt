@@ -11,10 +11,10 @@ interface ItemDao {
     @Query("SELECT * FROM item_table WHERE id = :itemId")
     suspend fun getItemById(itemId: Int): Item?
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(item: Item)
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAll(items: List<Item>)
 
     @Update
@@ -26,11 +26,8 @@ interface ItemDao {
     @Delete
     suspend fun delete(item: Item)
 
-    @Query("DELETE FROM item_table")
-    suspend fun deleteAll()
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertItems(items: List<Item>)
+    @Delete
+    suspend fun deleteAll(items: List<Item>)
 
     @Query("SELECT * FROM item_table WHERE is_purchased = 1 AND category = :category")
     fun getPurchasedItemsByCategory(category: String): Flow<List<Item>>
