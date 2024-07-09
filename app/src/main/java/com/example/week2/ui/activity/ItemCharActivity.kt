@@ -3,6 +3,7 @@ package com.example.week2
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
+import android.widget.Button
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
@@ -25,7 +26,15 @@ class ItemCharActivity : AppCompatActivity(), ItemListAdapter.OnItemClickListene
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_inventory)
 
-        sharedPreferences = getSharedPreferences("Char", MODE_PRIVATE)
+        sharedPreferences = getSharedPreferences("Items", MODE_PRIVATE)
+        val button = findViewById<Button>(R.id.default_button)
+        button.setOnClickListener {
+            val editor = sharedPreferences.edit()
+            editor.putInt("clothes", 0)
+            editor.apply()
+            val savedHatId = sharedPreferences.getInt("clothes", 0)
+            Log.d("ItemHatActivity", "Saved clothes ID: $savedHatId")
+        }
         setupToolbar()
         setupRecyclerView()
 
@@ -64,9 +73,9 @@ class ItemCharActivity : AppCompatActivity(), ItemListAdapter.OnItemClickListene
     }
     private fun saveHatIdToSharedPreferences(hatId: Int) {
         val editor = sharedPreferences.edit()
-        editor.putInt("Char", hatId)
+        editor.putInt("clothes", hatId)
         editor.apply()
-        val savedHatId = sharedPreferences.getInt("Char", -1)
-        Log.d("ItemHatActivity", "Saved Hat ID: $savedHatId")
+        val savedHatId = sharedPreferences.getInt("clothes", -1)
+        Log.d("ItemHatActivity", "Saved clothes ID: $savedHatId")
     }
 }

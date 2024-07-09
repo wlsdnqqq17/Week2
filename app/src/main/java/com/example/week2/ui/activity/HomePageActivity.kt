@@ -7,6 +7,7 @@ import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
@@ -15,6 +16,9 @@ import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import com.bumptech.glide.Glide
+import com.example.week2.data.item.ItemViewModel
+import com.example.week2.data.item.ItemViewModelFactory
 import com.example.week2.data.meal.WordsApplication
 
 class HomePageActivity : AppCompatActivity() {
@@ -25,11 +29,24 @@ class HomePageActivity : AppCompatActivity() {
     private val mealViewModel: MealViewModel by viewModels {
         MealViewModelFactory((application as WordsApplication).mealRepository)
     }
+    private val itemViewModel: ItemViewModel by viewModels {
+        ItemViewModelFactory((application as WordsApplication).itemRepository)
+    }
+    private lateinit var avatarBg: ImageView
+    private lateinit var avatarChar: ImageView
+    private lateinit var avatarAcc: ImageView
+    private lateinit var avatarHat: ImageView
 
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_homepage)
+
+        avatarBg = findViewById(R.id.avatar_bg)
+        avatarChar = findViewById(R.id.avatar_char)
+        avatarAcc = findViewById(R.id.avatar_acc)
+        avatarHat = findViewById(R.id.avatar_hat)
+
         val setBudgetButton: TextView = findViewById(R.id.budget_text)
         val mealIcon: ImageView = findViewById(R.id.meal_icon)
         val inventoryIcon: ImageView = findViewById(R.id.inventory)
@@ -59,7 +76,6 @@ class HomePageActivity : AppCompatActivity() {
                 }
             }
         }
-
 
         setBudgetButton.setOnClickListener {
             val intent = Intent(this, SetBudgetActivity::class.java)
@@ -99,6 +115,7 @@ class HomePageActivity : AppCompatActivity() {
             val intent = Intent(this, PotatoActivity::class.java)
             startActivity(intent)
         }
+
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 if (backPressedOnce) {
@@ -110,6 +127,55 @@ class HomePageActivity : AppCompatActivity() {
                 }
             }
         })
+    }
 
+    override fun onResume() {
+        super.onResume()
+        loadAvatarImages()
+    }
+
+    private fun loadAvatarImages() {
+        val sharedPreferencesItems: SharedPreferences = getSharedPreferences("Items", MODE_PRIVATE)
+        val accId = sharedPreferencesItems.getInt("accessory", 0)
+        val bgId = sharedPreferencesItems.getInt("background", 0)
+        val charId = sharedPreferencesItems.getInt("clothes", 0)
+        val hatId = sharedPreferencesItems.getInt("hat", 0)
+
+
+        if (charId == 0) {
+            avatarChar.setImageResource(R.drawable.defaultchar)
+        } else {
+            loadAvatarImage(charId, avatarChar)
+        }
+        if (bgId == 0) {
+            avatarBg.setImageResource(R.drawable.empty)
+        } else {
+            loadAvatarImage(bgId, avatarBg)
+        }
+        if (accId == 0) {
+            avatarAcc.setImageResource(R.drawable.empty)
+        } else {
+            loadAvatarImage(accId, avatarAcc)
+        }
+        if (hatId == 0) {
+            avatarHat.setImageResource(R.drawable.empty)
+        } else {
+            loadAvatarImage(hatId, avatarHat)
+        }
+
+    }
+
+    private fun loadAvatarImage(id: Int, imageView: ImageView) {
+        Log.d("HomePageActivity", "Loading image for item ID: $id")
+        itemViewModel.getItemById(id).observe(this) { item ->
+            if (item != null) {
+                Log.d("HomePageActivity", "Item found: ${item.item_image_url}")
+                Glide.with(this)
+                    .load(item.item_image_url)
+                    .into(imageView)
+            } else {
+                Log.d("HomePageActivity", "Item not found for ID: $id")
+            }
+        }
     }
 }

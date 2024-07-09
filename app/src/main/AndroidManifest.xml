@@ -47,13 +47,12 @@
         <activity android:name=".NewMealActivity"/>
         <activity android:name=".SetBudgetActivity"/>
         <activity android:name=".EditMealActivity"/>
-        <activity android:name=".FriendActivity"/>
-        <activity android:name="FriendAddActivity"/>
-        <activity android:name="BagActivity"/>
-        <activity android:name="ItemCharActivity"/>
-        <activity android:name="ItemHatActivity"/>
-        <activity android:name="ItemAccActivity"/>
-        <activity android:name="ItemBgActivity"/>
+        <activity android:name=".ItemHatActivity"/>
+        <activity android:name=".FriendAddActivity"/>
+        <activity android:name=".BagActivity"/>
+        <activity android:name=".ItemCharActivity"/>
+        <activity android:name=".ItemAccActivity"/>
+        <activity android:name=".ItemBgActivity"/>
 
     </application>
 
