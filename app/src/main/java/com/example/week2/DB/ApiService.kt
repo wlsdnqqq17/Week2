@@ -33,6 +33,16 @@ data class FriendRequest(
     val to_user_id: String
 )
 
+data class PurchaseItemRequest(
+    val user_id: String,
+    val item_id: Int
+)
+
+data class PurchaseItemResponse(
+    val status: String,
+    val error: String?
+)
+
 interface ApiService {
     @POST("save_kakao_user/")
     fun saveKakaoUser(@Body user: User): Call<Void>
@@ -54,6 +64,9 @@ interface ApiService {
 
     @POST("accept_friend_request/")
     fun acceptFriendRequest(@Body request: FriendRequest): Call<Void>
+
+    @POST("purchase_item/")
+    fun purchaseItem(@Body request: PurchaseItemRequest): Call<PurchaseItemResponse>
 
 }
 

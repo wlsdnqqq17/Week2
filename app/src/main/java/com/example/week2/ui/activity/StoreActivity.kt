@@ -1,5 +1,6 @@
 package com.example.week2
 
+import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
@@ -169,23 +170,45 @@ class StoreActivity : AppCompatActivity(), ItemListAdapter.OnItemClickListener {
     }
 
     private fun purchaseItem(itemId: Int) {
-        CoroutineScope(Dispatchers.IO).launch {
-            val item = repository.getItemById(itemId)
+        val sharedPref = getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
+        val loginId = sharedPref.getString("login_id", null)
+        if (loginId == null) {
+            Log.e("PurchaseItem", "User not logged in")
+            return
+        }
 
-            item?.let {
-                val updatedItem = it.copy(isPurchased = true)
-                repository.update(updatedItem)
-                Log.d("StoreActivity", "Item ID $itemId has been purchased and updated")
+        // Server DB update
+        val request = PurchaseItemRequest(user_id = loginId, item_id = itemId)
+        apiService.purchaseItem(request).enqueue(object : Callback<PurchaseItemResponse> {
+            override fun onResponse(call: Call<PurchaseItemResponse>, response: Response<PurchaseItemResponse>) {
+                if (response.isSuccessful && response.body()?.status == "Item purchased successfully") {
+                    // Local DB update
+                    CoroutineScope(Dispatchers.IO).launch {
+                        val item = repository.getItemById(itemId)
 
-                val currentCount = sharedPreferences.getInt("Potato", 0)
-                val newCount = currentCount - item.price
-                val editor: SharedPreferences.Editor = sharedPreferences.edit()
-                editor.putInt("Potato", newCount)
-                editor.apply()
-                runOnUiThread {
-                    potatoCount.text = "$newCount"
+                        item?.let {
+                            val updatedItem = it.copy(isPurchased = true)
+                            repository.update(updatedItem)
+                            Log.d("StoreActivity", "Item ID $itemId has been purchased and updated")
+
+                            val currentCount = sharedPreferences.getInt("Potato", 0)
+                            val newCount = currentCount - item.price
+                            val editor: SharedPreferences.Editor = sharedPreferences.edit()
+                            editor.putInt("Potato", newCount)
+                            editor.apply()
+                            runOnUiThread {
+                                potatoCount.text = "$newCount"
+                            }
+                        }
+                    }
+                } else {
+                    Log.e("ServerResponse", "Failed to purchase item: ${response.body()?.error}")
                 }
             }
-        }
+
+            override fun onFailure(call: Call<PurchaseItemResponse>, t: Throwable) {
+                Log.e("ServerResponse", "Error: ${t.message}")
+            }
+        })
     }
 }
