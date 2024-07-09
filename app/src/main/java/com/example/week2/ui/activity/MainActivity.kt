@@ -16,6 +16,20 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        // Check if the user is already logged in
+        val sharedPref = getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
+        val savedLoginId = sharedPref.getString("login_id", null)
+        val savedNickname = sharedPref.getString("nickname", null)
+
+        if (savedLoginId != null && savedNickname != null) {
+            // User is already logged in, redirect to HomePageActivity
+            val intent = Intent(this, HomePageActivity::class.java)
+            startActivity(intent)
+            finish() // Prevent the user from returning to the login screen
+            return
+        }
+
         val kakaoLoginButton: ImageButton = findViewById(R.id.kakao_login_button)
         /*------For Test-------*/
         //val intent = Intent(this@MainActivity, HomePageActivity::class.java)
