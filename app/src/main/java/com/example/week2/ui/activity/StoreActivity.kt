@@ -2,12 +2,20 @@ package com.example.week2
 
 import android.os.Bundle
 import android.util.Log
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.week2.DB.ApiClient
 import com.example.week2.data.AppRoomDatabase
 import com.example.week2.data.item.Item
 import com.example.week2.data.item.ItemRepository
+import com.example.week2.data.item.ItemViewModel
+import com.example.week2.data.item.ItemViewModelFactory
+import com.example.week2.data.meal.WordsApplication
+import com.example.week2.ui.adapter.ItemListAdapter
+import com.example.week2.ui.adapter.MealListAdapter
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -15,26 +23,42 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class StoreActivity : AppCompatActivity() {
+class StoreActivity : AppCompatActivity(), ItemListAdapter.OnItemClickListener{
     private lateinit var apiService: ApiService
     private lateinit var repository: ItemRepository
+    private val itemViewModel: ItemViewModel by viewModels {
+        ItemViewModelFactory((application as WordsApplication).itemRepository)
+    }
+    private val adapter = ItemListAdapter(this)
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_store)
 
-        val toolbar: Toolbar = findViewById(R.id.toolbar)
-        setSupportActionBar(toolbar)
-
-        supportActionBar?.setDisplayShowTitleEnabled(false)
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
-
+        setupToolbar()
+        setupRecyclerView()
         apiService = ApiClient.getClient().create(ApiService::class.java)
 
         val db = AppRoomDatabase.getDatabase(applicationContext, CoroutineScope(Dispatchers.IO))
         repository = ItemRepository(db.itemDao())
         fetchShopItems()
+        observeViewModel()
     }
+
+    private fun setupToolbar() {
+        val toolbar: Toolbar = findViewById(R.id.toolbar)
+        setSupportActionBar(toolbar)
+        supportActionBar?.setDisplayShowTitleEnabled(false)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+    }
+
+    private fun setupRecyclerView() {
+        val recyclerView: RecyclerView = findViewById(R.id.recyclerview)
+        recyclerView.adapter = adapter
+        recyclerView.layoutManager = LinearLayoutManager(this)
+    }
+
     override fun onSupportNavigateUp(): Boolean {
         onBackPressedDispatcher.onBackPressed()
         return true
@@ -61,6 +85,12 @@ class StoreActivity : AppCompatActivity() {
             }
         })
     }
+    private fun observeViewModel() {
+        itemViewModel.allItems.observe(this) { items ->
+            items.let { adapter.submitList(it) }
+        }
+    }
+
     private fun saveItemsToLocalDatabase(items: List<Item>) {
         CoroutineScope(Dispatchers.IO).launch {
 
@@ -72,5 +102,9 @@ class StoreActivity : AppCompatActivity() {
                 Log.d("ShopItems", "After Inserting: $allItems")
             }
         }
+    }
+
+    override fun onItemClick(position: Int) {
+        TODO("Not yet implemented")
     }
 }

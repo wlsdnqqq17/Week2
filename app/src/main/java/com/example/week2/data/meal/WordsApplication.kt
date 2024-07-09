@@ -4,6 +4,7 @@ import android.app.Application
 import com.example.week2.data.AppRoomDatabase
 import com.example.week2.MealRepository
 import com.example.week2.R
+import com.example.week2.data.item.ItemRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
 import com.kakao.sdk.common.KakaoSdk
@@ -17,6 +18,7 @@ class WordsApplication : Application() {
     val database by lazy { AppRoomDatabase.getDatabase(this, applicationScope) }
     //val wordRepository by lazy { WordRepository(database.wordDao()) }
     val mealRepository by lazy { MealRepository(database.mealDao()) }
+    val itemRepository by lazy { ItemRepository(database.itemDao()) }
 
     override fun onCreate() {
         super.onCreate()
