@@ -71,7 +71,7 @@ class HomePageActivity : AppCompatActivity() {
         }
 
         inventoryIcon.setOnClickListener {
-            val intent = Intent(this, InventoryActivity::class.java)
+            val intent = Intent(this, BagActivity::class.java)
             startActivity(intent)
         }
 

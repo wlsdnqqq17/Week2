@@ -31,4 +31,7 @@ interface ItemDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertItems(items: List<Item>)
+
+    @Query("SELECT * FROM item_table WHERE is_purchased = 1 AND category = :category")
+    fun getPurchasedItemsByCategory(category: String): Flow<List<Item>>
 }

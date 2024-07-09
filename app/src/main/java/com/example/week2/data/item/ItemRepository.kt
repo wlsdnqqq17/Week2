@@ -7,6 +7,10 @@ class ItemRepository(private val itemDao: ItemDao) {
 
     val allItems: Flow<List<Item>> = itemDao.getAllItems()
 
+    fun getPurchasedItemsByCategory(category: String): Flow<List<Item>> {
+        return itemDao.getPurchasedItemsByCategory(category)
+    }
+
     @WorkerThread
     suspend fun insert(item: Item) {
         itemDao.insert(item)
