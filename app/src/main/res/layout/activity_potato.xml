@@ -46,18 +46,69 @@
         </LinearLayout>
     </androidx.appcompat.widget.Toolbar>
 
-    <android.widget.Button
-        android:id="@+id/receive_button"
+    <TextView
+        android:id="@+id/first_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="  감자 받기  "
+        android:text="하루에 한 번 감자를 받을 수 있습니다"
+        android:textSize="15sp"
+        app:layout_constraintTop_toBottomOf="@id/toolbar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="16dp"/>
+
+    <android.widget.Button
+        android:id="@+id/today_potato"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:text="오늘의 감자 받기"
+        android:textSize="24sp"
+        android:padding="12dp"
+        android:textColor="@color/black"
+        android:background="@drawable/button_background"
+        app:layout_constraintTop_toBottomOf="@id/first_text"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="16dp"/>
+
+    <TextView
+        android:id="@+id/second_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="어제 식비 예산을 지켰다면 감자를 받을 수 있습니다"
+        android:textSize="15sp"
+        app:layout_constraintTop_toBottomOf="@id/today_potato"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="16dp"/>
+
+    <android.widget.Button
+        android:id="@+id/mission_potato"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:text="미션 성공 감자"
+        android:padding="12dp"
         android:textSize="24sp"
         android:textColor="@color/black"
         android:background="@drawable/button_background"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/second_text"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="16dp"/>
 
+    <android.widget.Button
+        android:id="@+id/developer_potato"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="208dp"
+        android:background="@drawable/button_background"
+        android:padding="12dp"
+        android:text="개발자용"
+        android:textColor="@color/black"
+        android:textSize="24sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/mission_potato"
+        app:layout_constraintBottom_toBottomOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -13,6 +13,7 @@ class MealViewModel(private val repository: MealRepository) : ViewModel() {
 
     val todayMeals: LiveData<List<Meal>> = repository.todayMeals.asLiveData()
     val todayMealCostSum: LiveData<Int> = repository.getTodayMealCostSum()
+    val yesterdayMealCostSum: LiveData<Int> = repository.getYesterdayMealCostSum()
 
     fun insert(meal: Meal) = viewModelScope.launch {
         repository.insert(meal)
