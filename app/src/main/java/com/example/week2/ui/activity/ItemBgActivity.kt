@@ -3,6 +3,7 @@ package com.example.week2
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
+import android.widget.Button
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
@@ -24,8 +25,15 @@ class ItemBgActivity : AppCompatActivity(), ItemListAdapter.OnItemClickListener 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_inventory)
-        sharedPreferences = getSharedPreferences("Bg", MODE_PRIVATE)
-
+        sharedPreferences = getSharedPreferences("Items", MODE_PRIVATE)
+        val button = findViewById<Button>(R.id.default_button)
+        button.setOnClickListener {
+            val editor = sharedPreferences.edit()
+            editor.putInt("background", 0)
+            editor.apply()
+            val savedHatId = sharedPreferences.getInt("background", 0)
+            Log.d("ItemHatActivity", "Saved background ID: $savedHatId")
+        }
         setupToolbar()
         setupRecyclerView()
 
@@ -64,9 +72,9 @@ class ItemBgActivity : AppCompatActivity(), ItemListAdapter.OnItemClickListener 
     }
     private fun saveHatIdToSharedPreferences(hatId: Int) {
         val editor = sharedPreferences.edit()
-        editor.putInt("Bg", hatId)
+        editor.putInt("background", hatId)
         editor.apply()
-        val savedHatId = sharedPreferences.getInt("Bg", -1)
-        Log.d("ItemHatActivity", "Saved Hat ID: $savedHatId")
+        val savedHatId = sharedPreferences.getInt("background", -1)
+        Log.d("ItemHatActivity", "Saved Backgroud ID: $savedHatId")
     }
 }

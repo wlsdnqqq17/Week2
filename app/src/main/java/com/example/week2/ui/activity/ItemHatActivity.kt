@@ -25,15 +25,15 @@ class ItemHatActivity : AppCompatActivity(), ItemListAdapter.OnItemClickListener
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_inventory)
-        sharedPreferences = getSharedPreferences("Hat", MODE_PRIVATE)
+        sharedPreferences = getSharedPreferences("Items", MODE_PRIVATE)
 
         val button = findViewById<Button>(R.id.default_button)
         button.setOnClickListener {
             val editor = sharedPreferences.edit()
-            editor.putInt("Hat", 0)
+            editor.putInt("hat", 0)
             editor.apply()
-            val savedHatId = sharedPreferences.getInt("Hat", -1)
-            Log.d("ItemHatActivity", "Saved Hat ID: $savedHatId")
+            val savedHatId = sharedPreferences.getInt("hat", 0)
+            Log.d("ItemHatActivity", "Saved hat ID: $savedHatId")
         }
         setupToolbar()
         setupRecyclerView()
@@ -74,9 +74,9 @@ class ItemHatActivity : AppCompatActivity(), ItemListAdapter.OnItemClickListener
     }
     private fun saveHatIdToSharedPreferences(hatId: Int) {
         val editor = sharedPreferences.edit()
-        editor.putInt("Hat", hatId)
+        editor.putInt("hat", hatId)
         editor.apply()
-        val savedHatId = sharedPreferences.getInt("Hat", -1)
+        val savedHatId = sharedPreferences.getInt("hat", -1)
         Log.d("ItemHatActivity", "Saved Hat ID: $savedHatId")
     }
 }
