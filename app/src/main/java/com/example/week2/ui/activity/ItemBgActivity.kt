@@ -24,7 +24,7 @@ class ItemBgActivity : AppCompatActivity(), ItemListAdapter.OnItemClickListener 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_inventory)
-        sharedPreferences = getSharedPreferences("Bg", MODE_PRIVATE)
+        sharedPreferences = getSharedPreferences("background", MODE_PRIVATE)
 
         setupToolbar()
         setupRecyclerView()

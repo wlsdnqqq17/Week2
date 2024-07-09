@@ -53,7 +53,7 @@ class ItemAccActivity : AppCompatActivity(), ItemListAdapter.OnItemClickListener
     }
 
     private fun observeViewModel() {
-        itemViewModel.getPurchasedItemsByCategory("acc").observe(this) { items ->
+        itemViewModel.getPurchasedItemsByCategory("accessory").observe(this) { items ->
             items.let { adapter.submitList(it) }
         }
     }

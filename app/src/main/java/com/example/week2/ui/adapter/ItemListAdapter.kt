@@ -8,6 +8,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.week2.R
 import com.example.week2.data.item.Item
 
@@ -19,7 +20,7 @@ class ItemListAdapter(private val onItemClickListener: OnItemClickListener) : Li
 
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
         val current = getItem(position)
-        holder.bind(current.name, current.price)
+        holder.bind(current.name, current.price, current.item_image_url)
     }
 
     class ItemViewHolder(itemView: View, private val onItemClickListener: OnItemClickListener) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
@@ -31,9 +32,10 @@ class ItemListAdapter(private val onItemClickListener: OnItemClickListener) : Li
             itemView.setOnClickListener(this)
         }
 
-        fun bind(name: String?, cost: Int?) {
-            // Sample image setting, replace with actual image loading logic if needed
-            itemImageView.setImageResource(R.drawable.naked)
+        fun bind(name: String?, cost: Int?, imageUrl: String?) {
+            Glide.with(itemView.context)
+                .load(imageUrl)
+                .into(itemImageView)
             itemItemView1.text = name
             itemItemView2.text = cost.toString()
         }
