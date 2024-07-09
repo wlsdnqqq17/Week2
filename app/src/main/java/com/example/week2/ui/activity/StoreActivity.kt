@@ -1,9 +1,10 @@
 package com.example.week2
 
 import android.content.Context
+import android.content.DialogInterface
 import android.os.Bundle
-import android.content.SharedPreferences
 import android.util.Log
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
@@ -31,14 +32,11 @@ class StoreActivity : AppCompatActivity(), ItemListAdapter.OnItemClickListener{
         ItemViewModelFactory((application as WordsApplication).itemRepository)
     }
     private val adapter = ItemListAdapter(this)
-    private lateinit var sharedPreferences: SharedPreferences
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_store)
-
-        sharedPreferences = getSharedPreferences("my_preferences", Context.MODE_PRIVATE)
 
         setupToolbar()
         setupRecyclerView()
@@ -130,13 +128,50 @@ class StoreActivity : AppCompatActivity(), ItemListAdapter.OnItemClickListener{
 
     override fun onItemClick(position: Int) {
         val selectedItem = adapter.currentList[position]
-        saveItemIdToPreferences(selectedItem.id)
+        showPurchaseDialog(selectedItem)
     }
 
-    private fun saveItemIdToPreferences(itemId: Int) {
-        val editor = sharedPreferences.edit()
-        editor.putInt("selected_item_id", itemId)
-        editor.apply()
-        Log.d("StoreActivity", "Item ID $itemId saved to SharedPreferences")
+    private fun showPurchaseDialog(item: Item) {
+        if (item.isPurchased) {
+            // 이미 구매한 아이템인 경우 메시지를 표시하고 종료
+            runOnUiThread {
+                androidx.appcompat.app.AlertDialog.Builder(this)
+                    .setTitle("구매 불가")
+                    .setMessage("이미 구매한 아이템입니다.")
+                    .setPositiveButton("확인") { dialog, _ -> dialog.dismiss() }
+                    .show()
+            }
+            return
+        }
+
+        val builder = androidx.appcompat.app.AlertDialog.Builder(this)
+        builder.setTitle("구매 확인")
+        builder.setMessage("정말 ${item.name}을(를) 구매하시겠습니까?")
+
+        builder.setPositiveButton("예") { dialog, which ->
+            purchaseItem(item.id)
+            dialog.dismiss()
+        }
+
+        builder.setNegativeButton("아니오") { dialog, which ->
+            dialog.dismiss()
+        }
+
+        val dialog = builder.create()
+        dialog.show()
+    }
+
+    private fun purchaseItem(itemId: Int) {
+        CoroutineScope(Dispatchers.IO).launch {
+            // 아이템을 데이터베이스에서 가져옵니다.
+            val item = repository.getItemById(itemId)
+
+            // 아이템이 존재하면 isPurchased 값을 true로 업데이트하고 데이터베이스에 저장합니다.
+            item?.let {
+                val updatedItem = it.copy(isPurchased = true)
+                repository.update(updatedItem)
+                Log.d("StoreActivity", "Item ID $itemId has been purchased and updated")
+            }
+        }
     }
 }
