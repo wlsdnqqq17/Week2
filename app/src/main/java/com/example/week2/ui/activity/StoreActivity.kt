@@ -2,8 +2,10 @@ package com.example.week2
 
 import android.content.Context
 import android.content.DialogInterface
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -25,18 +27,27 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class StoreActivity : AppCompatActivity(), ItemListAdapter.OnItemClickListener{
+class StoreActivity : AppCompatActivity(), ItemListAdapter.OnItemClickListener {
     private lateinit var apiService: ApiService
     private lateinit var repository: ItemRepository
     private val itemViewModel: ItemViewModel by viewModels {
         ItemViewModelFactory((application as WordsApplication).itemRepository)
     }
     private val adapter = ItemListAdapter(this)
-
+    private lateinit var sharedPreferences: SharedPreferences
+    private lateinit var potatoCount: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_store)
+
+        // Initialize SharedPreferences and TextView
+        sharedPreferences = getSharedPreferences("Potato", MODE_PRIVATE)
+        potatoCount = findViewById(R.id.potato_count)
+
+        // Set saved potato count to TextView
+        val savedInt = sharedPreferences.getInt("Potato", 0)
+        potatoCount.text = "$savedInt"
 
         setupToolbar()
         setupRecyclerView()
@@ -62,18 +73,15 @@ class StoreActivity : AppCompatActivity(), ItemListAdapter.OnItemClickListener{
         recyclerView.layoutManager = GridLayoutManager(this, spanCount)
     }
 
-
     override fun onSupportNavigateUp(): Boolean {
         onBackPressedDispatcher.onBackPressed()
         return true
     }
 
-
     private fun fetchShopItems() {
         val url = "https://run.mocky.io/v3/3b211402-549c-4d43-b22a-9437e3bbde58/"
         apiService.getShopItems(url).enqueue(object : Callback<List<Item>> {
             override fun onResponse(call: Call<List<Item>>, response: Response<List<Item>>) {
-
                 if (response.isSuccessful) {
                     val items = response.body()
                     items?.let {
@@ -88,6 +96,7 @@ class StoreActivity : AppCompatActivity(), ItemListAdapter.OnItemClickListener{
             }
         })
     }
+
     private fun observeViewModel() {
         itemViewModel.allItems.observe(this) { items ->
             items.let { adapter.submitList(it) }
@@ -97,13 +106,10 @@ class StoreActivity : AppCompatActivity(), ItemListAdapter.OnItemClickListener{
     private fun updateLocalDatabase(items: List<Item>) {
         CoroutineScope(Dispatchers.IO).launch {
             val existingItems = mutableListOf<Item>()
-
-            // 데이터를 수집하고 로그를 출력합니다.
             repository.allItems.collect {
                 existingItems.addAll(it)
                 Log.d("ShopItems", "Collected existing items: $existingItems")
 
-                // 서버에서 가져온 데이터와 기존 데이터를 병합합니다.
                 val itemsToUpdate = items.map { newItem ->
                     val existingItem = existingItems.find { it.id == newItem.id }
                     if (existingItem != null) {
@@ -113,18 +119,14 @@ class StoreActivity : AppCompatActivity(), ItemListAdapter.OnItemClickListener{
                     }
                 }
 
-                // 로컬 데이터베이스에 업데이트된 데이터를 저장합니다.
                 repository.updateAll(itemsToUpdate)
 
-                // 업데이트 후 모든 데이터를 로그로 출력합니다.
                 repository.allItems.collect { allItems ->
                     Log.d("ShopItems", "After Updating: $allItems")
                 }
             }
         }
     }
-
-
 
     override fun onItemClick(position: Int) {
         val selectedItem = adapter.currentList[position]
@@ -133,7 +135,6 @@ class StoreActivity : AppCompatActivity(), ItemListAdapter.OnItemClickListener{
 
     private fun showPurchaseDialog(item: Item) {
         if (item.isPurchased) {
-            // 이미 구매한 아이템인 경우 메시지를 표시하고 종료
             runOnUiThread {
                 androidx.appcompat.app.AlertDialog.Builder(this)
                     .setTitle("구매 불가")
@@ -163,14 +164,21 @@ class StoreActivity : AppCompatActivity(), ItemListAdapter.OnItemClickListener{
 
     private fun purchaseItem(itemId: Int) {
         CoroutineScope(Dispatchers.IO).launch {
-            // 아이템을 데이터베이스에서 가져옵니다.
             val item = repository.getItemById(itemId)
 
-            // 아이템이 존재하면 isPurchased 값을 true로 업데이트하고 데이터베이스에 저장합니다.
             item?.let {
                 val updatedItem = it.copy(isPurchased = true)
                 repository.update(updatedItem)
                 Log.d("StoreActivity", "Item ID $itemId has been purchased and updated")
+
+                val currentCount = sharedPreferences.getInt("Potato", 0)
+                val newCount = currentCount - item.price
+                val editor: SharedPreferences.Editor = sharedPreferences.edit()
+                editor.putInt("Potato", newCount)
+                editor.apply()
+                runOnUiThread {
+                    potatoCount.text = "$newCount"
+                }
             }
         }
     }
