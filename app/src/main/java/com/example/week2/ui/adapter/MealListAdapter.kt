@@ -19,10 +19,11 @@ class MealListAdapter(private val onItemClickListener: OnItemClickListener) : Li
 
     override fun onBindViewHolder(holder: MealViewHolder, position: Int) {
         val current = getItem(position)
-        holder.bind(current.mealName, current.price)
+        holder.bind(current.mealTime, current.mealName, current.price)
     }
 
     class MealViewHolder(itemView: View, private val onItemClickListener: OnItemClickListener) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
+        private val mealItemView0: TextView = itemView.findViewById(R.id.textView0)
         private val mealItemView1: TextView = itemView.findViewById(R.id.textView1)
         private val mealItemView2: TextView = itemView.findViewById(R.id.textView2)
 
@@ -30,7 +31,8 @@ class MealListAdapter(private val onItemClickListener: OnItemClickListener) : Li
             itemView.setOnClickListener(this)
         }
 
-        fun bind(name: String?, cost: Int?) {
+        fun bind(meal_time: String?, name: String?, cost: Int?) {
+            mealItemView0.text = meal_time
             mealItemView1.text = name
             mealItemView2.text = cost.toString()
         }
