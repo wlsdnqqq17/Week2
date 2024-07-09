@@ -13,6 +13,10 @@ class ItemViewModel(private val repository: ItemRepository) : ViewModel() {
 
     val allItems: LiveData<List<Item>> = repository.allItems.asLiveData()
 
+    fun getPurchasedItemsByCategory(category: String): LiveData<List<Item>> {
+        return repository.getPurchasedItemsByCategory(category).asLiveData()
+    }
+
     fun insert(item: Item) = viewModelScope.launch {
         repository.insert(item)
     }

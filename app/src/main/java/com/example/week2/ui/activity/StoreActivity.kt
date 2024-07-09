@@ -19,6 +19,7 @@ import com.example.week2.data.meal.WordsApplication
 import com.example.week2.ui.adapter.ItemListAdapter
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
