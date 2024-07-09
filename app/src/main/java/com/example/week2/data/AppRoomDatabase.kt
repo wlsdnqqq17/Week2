@@ -69,11 +69,11 @@ abstract class AppRoomDatabase : RoomDatabase() {
 //            word = Word("World!")
 //            wordDao.insert(word)
 
-            var meal = Meal( mealTime = "점심", mealName = "피자", price = 5000, date = "2024-07-09", memo = "")
+            val meal = Meal( mealTime = "점심", mealName = "피자", price = 5000, date = "2024-07-09", memo = "")
             mealDao.insert(meal)
-            var item1 = Item( name = "벗기", category = "옷", imageUri = "", price = 3)
+            val item1 = Item( name = "중절모", category = "모자", imageUri = "", price = 3, isPurchased = true)
             itemDao.insert(item1)
-            var item2 = Item( name = "거위", category = "배경", imageUri = "", price = 2)
+            val item2 = Item( name = "벗기", category = "벗기", imageUri = "", price = 2)
             itemDao.insert(item2)
         }
     }

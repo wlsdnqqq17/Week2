@@ -3,6 +3,7 @@ package com.example.week2.ui.adapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -22,6 +23,7 @@ class ItemListAdapter(private val onItemClickListener: OnItemClickListener) : Li
     }
 
     class ItemViewHolder(itemView: View, private val onItemClickListener: OnItemClickListener) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
+        private val itemImageView: ImageView = itemView.findViewById(R.id.imageView)
         private val itemItemView1: TextView = itemView.findViewById(R.id.textView1)
         private val itemItemView2: TextView = itemView.findViewById(R.id.textView2)
 
@@ -30,6 +32,8 @@ class ItemListAdapter(private val onItemClickListener: OnItemClickListener) : Li
         }
 
         fun bind(name: String?, cost: Int?) {
+            // Sample image setting, replace with actual image loading logic if needed
+            itemImageView.setImageResource(R.drawable.naked)
             itemItemView1.text = name
             itemItemView2.text = cost.toString()
         }

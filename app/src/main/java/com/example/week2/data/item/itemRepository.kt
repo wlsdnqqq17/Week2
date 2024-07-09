@@ -18,6 +18,11 @@ class ItemRepository(private val itemDao: ItemDao) {
     }
 
     @WorkerThread
+    suspend fun updateAll(items: List<Item>) {
+        itemDao.updateAll(items)
+    }
+
+    @WorkerThread
     suspend fun deleteAll() {
         itemDao.deleteAll()
     }

@@ -2,7 +2,6 @@ package com.example.week2.data.item
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
-import androidx.room.Index
 import androidx.room.PrimaryKey
 
 @Entity(tableName = "item_table")
@@ -11,5 +10,6 @@ data class Item(
     @ColumnInfo(name = "name") val name: String,
     @ColumnInfo(name = "category") val category: String,
     @ColumnInfo(name = "image_uri") val imageUri: String,
-    @ColumnInfo(name = "price") val price: Int
+    @ColumnInfo(name = "price") val price: Int,
+    @ColumnInfo(name = "is_purchased") val isPurchased: Boolean = false
 )
