@@ -20,7 +20,7 @@ data class UserResponse (
     val data: User?
 )
 
-data class Item(
+data class ServerItem(
     val id: Int,
     val name: String,
     val category: String,
@@ -51,7 +51,7 @@ interface ApiService {
     fun searchUser(@Query("loginId") login_id: String): Call<UserResponse>
 
     @GET("get_items/")
-    fun getShopItems(): Call<List<Item>>
+    fun getShopItems(): Call<List<ServerItem>>
 
     @POST("add_friend/")
     fun addFriend(@Body friendRequest: FriendRequest): Call<Void>
@@ -68,5 +68,7 @@ interface ApiService {
     @POST("purchase_item/")
     fun purchaseItem(@Body request: PurchaseItemRequest): Call<PurchaseItemResponse>
 
+    @GET("user_items/")
+    fun getUserItems(@Query("user_id") userId: String): Call<List<Item>>
 }
 

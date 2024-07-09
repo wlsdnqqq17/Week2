@@ -6,16 +6,26 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.ImageButton
 import androidx.appcompat.app.AppCompatActivity
+import com.example.week2.data.AppRoomDatabase
+import com.example.week2.data.item.Item
+import com.example.week2.data.item.ItemRepository
 import com.kakao.sdk.user.UserApiClient
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
 class MainActivity : AppCompatActivity() {
+    private lateinit var repository: ItemRepository
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        val db = AppRoomDatabase.getDatabase(applicationContext, CoroutineScope(Dispatchers.IO))
+        repository = ItemRepository(db.itemDao())
 
         // Check if the user is already logged in
         val sharedPref = getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
@@ -100,8 +110,7 @@ class MainActivity : AppCompatActivity() {
             override fun onResponse(call: Call<Void>, response: Response<Void>) {
                 if (response.isSuccessful) {
                     Log.i("ServerResponse", "User data sent successfully")
-                    val intent = Intent(this@MainActivity, HomePageActivity::class.java)
-                    startActivity(intent)
+                    fetchUserItems(loginId)
                 } else {
                     Log.e("ServerResponse", "Failed to send user data. Error code: ${response.code()}, Error body: ${response.errorBody()?.string()}")
                 }
@@ -111,5 +120,37 @@ class MainActivity : AppCompatActivity() {
                 Log.e("ServerResponse", "Error: ${t.message}")
             }
         })
+    }
+
+    private fun fetchUserItems(loginId: String) {
+        val retrofit = RetrofitClient.getInstance()
+        val apiService = retrofit.create(ApiService::class.java)
+
+        apiService.getUserItems(loginId).enqueue(object : Callback<List<Item>> {
+            override fun onResponse(call: Call<List<Item>>, response: Response<List<Item>>) {
+                if (response.isSuccessful) {
+                    val userItems = response.body()
+                    if (userItems != null) {
+                        saveUserItemsToLocalDB(userItems)
+                    }
+                    val intent = Intent(this@MainActivity, HomePageActivity::class.java)
+                    startActivity(intent)
+                    finish()
+                } else {
+                    Log.e("FetchUserItems", "Failed to fetch user items. Error code: ${response.code()}, Error body: ${response.errorBody()?.string()}")
+                }
+            }
+
+            override fun onFailure(call: Call<List<Item>>, t: Throwable) {
+                Log.e("FetchUserItems", "Error: ${t.message}")
+            }
+        })
+    }
+
+    private fun saveUserItemsToLocalDB(items: List<Item>) {
+        CoroutineScope(Dispatchers.IO).launch {
+            repository.insertAll(items)
+            Log.d("StoreActivity", "User items have been saved to the local database")
+        }
     }
 }

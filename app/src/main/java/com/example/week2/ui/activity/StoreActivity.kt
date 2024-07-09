@@ -78,9 +78,20 @@ class StoreActivity : AppCompatActivity(), ItemListAdapter.OnItemClickListener {
         return true
     }
 
+    private fun ServerItem.toItem(): Item {
+        return Item(
+            id = this.id,
+            name = this.name,
+            category = this.category,
+            item_image_url = this.item_image_url,
+            price = this.price,
+            isPurchased = false // 초기값 설정
+        )
+    }
+
     private fun fetchShopItems() {
-        apiService.getShopItems().enqueue(object : Callback<List<Item>> {
-            override fun onResponse(call: Call<List<Item>>, response: Response<List<Item>>) {
+        apiService.getShopItems().enqueue(object : Callback<List<ServerItem>> {
+            override fun onResponse(call: Call<List<ServerItem>>, response: Response<List<ServerItem>>) {
                 if (response.isSuccessful) {
                     val items = response.body()
                     items?.let {
@@ -90,7 +101,7 @@ class StoreActivity : AppCompatActivity(), ItemListAdapter.OnItemClickListener {
                 }
             }
 
-            override fun onFailure(call: Call<List<Item>>, t: Throwable) {
+            override fun onFailure(call: Call<List<ServerItem>>, t: Throwable) {
                 Log.e("ShopItems", "실패!!", t)
             }
         })
@@ -102,8 +113,9 @@ class StoreActivity : AppCompatActivity(), ItemListAdapter.OnItemClickListener {
         }
     }
 
-    private fun updateLocalDatabase(items: List<Item>) {
+    private fun updateLocalDatabase(serverItems: List<ServerItem>) {
         CoroutineScope(Dispatchers.IO).launch {
+            val items = serverItems.map { it.toItem() }
             val existingItems = mutableListOf<Item>()
             repository.allItems.collect {
                 existingItems.addAll(it)
