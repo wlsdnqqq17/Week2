@@ -56,7 +56,7 @@ class HomePageActivity : AppCompatActivity() {
         val potatoIcon: ImageView = findViewById(R.id.potato_icon)
         val infoIcon: ImageView = findViewById(R.id.info)
         val progressBar: ProgressBar = findViewById(R.id.progress_bar)
-        val sharedPreferences: SharedPreferences = getSharedPreferences("Budget", MODE_PRIVATE)
+        val sharedPreferences: SharedPreferences = getSharedPreferences("Potato", MODE_PRIVATE)
         val savedInt = sharedPreferences.getInt("Budget", 0)
 
         mealViewModel.todayMealCostSum.observe(this) { costSum ->

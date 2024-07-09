@@ -14,6 +14,10 @@ class MealRepository(private val mealDao: MealDao) {
         get() {
             return mealDao.getMealsByDate(getTodayDate())
         }
+    fun getYesterdayMealCostSum(): LiveData<Int> {
+        val yesterday = getYesterdayDate()
+        return mealDao.getTodayMealCostSum(yesterday).asLiveData()
+    }
 
     fun getTodayMealCostSum(): LiveData<Int> {
         val today = getTodayDate()
@@ -37,6 +41,13 @@ class MealRepository(private val mealDao: MealDao) {
 
     private fun getTodayDate(): String {
         val calendar = Calendar.getInstance()
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        return dateFormat.format(calendar.time)
+    }
+
+    private fun getYesterdayDate(): String {
+        val calendar = Calendar.getInstance()
+        calendar.add(Calendar.DATE, -1)
         val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
         return dateFormat.format(calendar.time)
     }
