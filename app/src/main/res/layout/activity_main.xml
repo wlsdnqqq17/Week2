@@ -2,16 +2,34 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity">
+
+
+
+    <VideoView
+        android:id="@+id/splash_video_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true" />
+
+    <ImageView
+        android:id="@+id/title_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:srcCompat="@drawable/title"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="30dp" />
 
     <ImageButton
         android:id="@+id/kakao_login_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/kakao_login"
+        android:paddingTop="300dp"
         android:contentDescription="카카오 로그인"
-        android:layout_centerInParent="true"/>
+        android:layout_centerInParent="true"
+        android:background="@android:color/transparent"/>
 </RelativeLayout>
