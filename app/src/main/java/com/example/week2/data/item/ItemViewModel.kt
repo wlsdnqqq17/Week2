@@ -1,6 +1,5 @@
 package com.example.week2.data.item
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -19,6 +18,10 @@ class ItemViewModel(private val repository: ItemRepository) : ViewModel() {
 
     fun insert(item: Item) = viewModelScope.launch {
         repository.insert(item)
+    }
+
+    fun getItemById(itemId: Int): LiveData<Item?> = liveData {
+        emit(repository.getItemById(itemId))
     }
 
 }

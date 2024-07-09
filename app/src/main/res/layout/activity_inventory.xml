@@ -18,7 +18,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="@string/screenname_4"
+            android:text="@string/screenname_3"
             android:textColor="#000000"
             android:textSize="20sp" />
     </androidx.appcompat.widget.Toolbar>

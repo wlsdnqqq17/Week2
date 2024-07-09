@@ -10,7 +10,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.week2.DB.ApiClient
 import com.example.week2.data.AppRoomDatabase
 import com.example.week2.data.item.Item
 import com.example.week2.data.item.ItemRepository
@@ -20,7 +19,6 @@ import com.example.week2.data.meal.WordsApplication
 import com.example.week2.ui.adapter.ItemListAdapter
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
@@ -97,6 +95,16 @@ class StoreActivity : AppCompatActivity(), ItemListAdapter.OnItemClickListener {
                 androidx.appcompat.app.AlertDialog.Builder(this)
                     .setTitle("구매 불가")
                     .setMessage("이미 구매한 아이템입니다.")
+                    .setPositiveButton("확인") { dialog, _ -> dialog.dismiss() }
+                    .show()
+            }
+            return
+        }
+        else if (item.price > sharedPreferences.getInt("Potato", 0)) {
+            runOnUiThread {
+                androidx.appcompat.app.AlertDialog.Builder(this)
+                    .setTitle("구매 불가")
+                    .setMessage("감자가 부족합니다.")
                     .setPositiveButton("확인") { dialog, _ -> dialog.dismiss() }
                     .show()
             }
