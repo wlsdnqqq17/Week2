@@ -41,10 +41,18 @@ class ItemRepository(private val itemDao: ItemDao) {
         itemDao.updateAll(items)
     }
 
+    @WorkerThread
+    suspend fun deleteAll() {
+        itemDao.deleteAll()
+    }
 
     @WorkerThread
     suspend fun getItemById(itemId: Int): Item? {
         return itemDao.getItemById(itemId)
     }
 
+    @WorkerThread
+    suspend fun getAllItems(): Flow<List<Item>> {
+        return itemDao.getAllItems()
+    }
 }
