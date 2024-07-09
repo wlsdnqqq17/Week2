@@ -22,6 +22,7 @@ class InfoActivity : AppCompatActivity() {
         supportActionBar?.setDisplayShowHomeEnabled(true)
 
         val IdTextView: TextView = findViewById(R.id.info_id)
+        val nameTextView: TextView = findViewById(R.id.info_name)
 
         val sharedPref = getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
         val myLoginId = sharedPref.getString("login_id", null)
@@ -29,6 +30,12 @@ class InfoActivity : AppCompatActivity() {
             IdTextView.text = myLoginId
         } else {
             Log.d("myLoginId", "login 아이디가 없음")
+        }
+        val myName = sharedPref.getString("nickname", null)
+        if (myName != null) {
+            nameTextView.text = myName
+        } else {
+            Log.d("myName", "nickname이 없음")
         }
     }
     override fun onSupportNavigateUp(): Boolean {

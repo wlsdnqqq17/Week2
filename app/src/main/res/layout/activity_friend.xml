@@ -17,7 +17,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="@string/screenname_7"
+            android:text="팔로우"
             android:textColor="#000000"
             android:textSize="20sp" />
     </androidx.appcompat.widget.Toolbar>
@@ -27,7 +27,7 @@
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@id/friend_toolbar"
         app:layout_constraintBottom_toTopOf="@id/friend_add_recycler_view"
-        android:text="친구 신청"
+        android:text="팔로우 신청 목록"
         android:layout_gravity="left"
         android:layout_margin="16dp"/>
 
@@ -47,7 +47,7 @@
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@id/friend_add_recycler_view"
         app:layout_constraintBottom_toTopOf="@id/friend_recycler_view"
-        android:text="친구 목록"
+        android:text="팔로우 목록"
         android:layout_gravity="left"
         android:layout_margin="16dp"/>
 
