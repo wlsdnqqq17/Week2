@@ -51,4 +51,8 @@ class ItemRepository(private val itemDao: ItemDao) {
         return itemDao.getItemById(itemId)
     }
 
+    @WorkerThread
+    suspend fun getAllItems(): Flow<List<Item>> {
+        return itemDao.getAllItems()
+    }
 }
