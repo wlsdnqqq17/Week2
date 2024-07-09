@@ -2,9 +2,11 @@ package com.example.week2
 
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.widget.ImageButton
+import android.widget.VideoView
 import androidx.appcompat.app.AppCompatActivity
 import com.kakao.sdk.user.UserApiClient
 import retrofit2.Call
@@ -16,7 +18,15 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        val videoView: VideoView = findViewById(R.id.splash_video_view)
         val kakaoLoginButton: ImageButton = findViewById(R.id.kakao_login_button)
+        val videoUri = Uri.parse("android.resource://" + packageName + "/" + R.raw.splash)
+        videoView.setVideoURI(videoUri)
+        videoView.setOnPreparedListener { mediaPlayer ->
+            mediaPlayer.isLooping = true
+        }
+        videoView.start()
         /*------For Test-------*/
         //val intent = Intent(this@MainActivity, HomePageActivity::class.java)
         //startActivity(intent)
