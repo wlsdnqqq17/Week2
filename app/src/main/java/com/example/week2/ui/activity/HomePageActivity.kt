@@ -136,6 +136,8 @@ class HomePageActivity : AppCompatActivity() {
                 }
             }
         })
+
+        loadAvatarImages()
     }
 
     override fun onResume() {
@@ -172,6 +174,7 @@ class HomePageActivity : AppCompatActivity() {
         val charId = sharedPreferencesItems.getInt("clothes", 0)
         val hatId = sharedPreferencesItems.getInt("hat", 0)
 
+        Log.d("loadAvatarImages", "Accessory ID: $accId, Background ID: $bgId, Clothes ID: $charId, Hat ID: $hatId")
 
         if (charId == 0) {
             avatarChar.setImageResource(R.drawable.defaultchar)

@@ -2,6 +2,7 @@ package com.example.week2
 
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
@@ -41,9 +42,10 @@ class MainActivity : AppCompatActivity() {
 
         if (savedLoginId != null && savedNickname != null) {
             // User is already logged in, redirect to HomePageActivity
-            val intent = Intent(this, HomePageActivity::class.java)
-            startActivity(intent)
-            finish() // Prevent the user from returning to the login screen
+            fetchUserItems(savedLoginId)
+            fetchAvatarState(savedLoginId) {
+                gotoHomePage()
+            }
             return
         }
 
@@ -71,7 +73,11 @@ class MainActivity : AppCompatActivity() {
                                 val nickname = user.kakaoAccount?.profile?.nickname
                                 if (nickname != null) {
                                     saveUserInfo(loginId, nickname)
-                                    sendUserToServer(loginId, nickname)
+                                    sendUserToServer(loginId, nickname) {
+                                        fetchAvatarState(loginId) {
+                                            gotoHomePage()
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -91,7 +97,11 @@ class MainActivity : AppCompatActivity() {
                                 val nickname = user.kakaoAccount?.profile?.nickname
                                 if (nickname != null) {
                                     saveUserInfo(loginId, nickname)
-                                    sendUserToServer(loginId, nickname)
+                                    sendUserToServer(loginId, nickname) {
+                                        fetchAvatarState(loginId) {
+                                            gotoHomePage()
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -110,7 +120,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun sendUserToServer(loginId: String, nickname: String) {
+    private fun sendUserToServer(loginId: String, nickname: String, onComplete: () -> Unit) {
         val retrofit = RetrofitClient.getInstance()
         val apiService = retrofit.create(ApiService::class.java)
         val user = User(loginId, nickname)
@@ -125,10 +135,12 @@ class MainActivity : AppCompatActivity() {
                 } else {
                     Log.e("ServerResponse", "Failed to send user data. Error code: ${response.code()}, Error body: ${response.errorBody()?.string()}")
                 }
+                onComplete()
             }
 
             override fun onFailure(call: Call<Void>, t: Throwable) {
                 Log.e("ServerResponse", "Error: ${t.message}")
+                onComplete()
             }
         })
     }
@@ -141,9 +153,6 @@ class MainActivity : AppCompatActivity() {
                     if (userItems != null) {
                         resetLocalDatabase(userItems)
                     }
-                    val intent = Intent(this@MainActivity, HomePageActivity::class.java)
-                    startActivity(intent)
-                    finish()
                 } else {
                     Log.e("FetchUserItems", "Failed to fetch user items. Error code: ${response.code()}, Error body: ${response.errorBody()?.string()}")
                 }
@@ -226,5 +235,66 @@ class MainActivity : AppCompatActivity() {
             price = this.price,
             isPurchased = false // 초기값 설정
         )
+    }
+
+    private fun fetchAvatarState(userId: String, onComplete: () -> Unit) {
+        apiService.getAvatarState(userId).enqueue(object : Callback<AvatarStateResponse> {
+            override fun onResponse(call: Call<AvatarStateResponse>, response: Response<AvatarStateResponse>) {
+                if (response.isSuccessful) {
+                    val avatarStateResponse = response.body()
+                    if (avatarStateResponse != null && avatarStateResponse.avatar_state != null) {
+                        Log.d("fetchAvatarState", "Parsed response: ${avatarStateResponse.avatar_state}")
+                        saveAvatarStateToSharedPreferences(avatarStateResponse.avatar_state)
+
+                        val sharedPreferencesItems: SharedPreferences = getSharedPreferences("user_prefs", MODE_PRIVATE)
+                        // 로그 확인
+                        val accId = sharedPreferencesItems.getInt("accessory", 0)
+                        val bgId = sharedPreferencesItems.getInt("background", 0)
+                        val charId = sharedPreferencesItems.getInt("clothes", 0)
+                        val hatId = sharedPreferencesItems.getInt("hat", 0)
+
+                        Log.d("fetchAvatarState", "Accessory ID: $accId, Background ID: $bgId, Clothes ID: $charId, Hat ID: $hatId")
+                        // 로그 확인
+                    } else {
+                        Log.e("FetchAvatarState", "Avatar state is null")
+                    }
+                } else {
+                    Log.e("FetchAvatarState", "Failed to fetch avatar state. Error code: ${response.code()}, Error body: ${response.errorBody()?.string()}")
+                }
+                onComplete()
+            }
+
+            override fun onFailure(call: Call<AvatarStateResponse>, t: Throwable) {
+                Log.e("FetchAvatarState", "Error: ${t.message}")
+                onComplete()
+            }
+        })
+    }
+
+    private fun saveAvatarStateToSharedPreferences(avatarState: AvatarState) {
+        Log.d("saveAvatarStateToSharedPreference", "$avatarState")
+        val sharedPref = getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
+        with(sharedPref.edit()) {
+            putInt("hat", avatarState.hat_item_id ?: 0)
+            putInt("clothes", avatarState.clothes_item_id ?: 0)
+            putInt("accessory", avatarState.accessory_item_id ?: 0)
+            putInt("background", avatarState.background_item_id ?: 0)
+            apply()
+        }
+        //로그확인
+        val sharedPreferencesItems: SharedPreferences = getSharedPreferences("user_prefs", MODE_PRIVATE)
+        val accId = sharedPreferencesItems.getInt("accessory", 0)
+        val bgId = sharedPreferencesItems.getInt("background", 0)
+        val charId = sharedPreferencesItems.getInt("clothes", 0)
+        val hatId = sharedPreferencesItems.getInt("hat", 0)
+
+        Log.d("saveAvatarStateToSharedPreference", "Accessory ID: $accId, Background ID: $bgId, Clothes ID: $charId, Hat ID: $hatId")
+        //로그확인
+    }
+
+    private fun gotoHomePage() {
+        val intent = Intent(this@MainActivity, HomePageActivity::class.java)
+        startActivity(intent)
+        finish()
     }
 }
