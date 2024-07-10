@@ -24,7 +24,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class ShopCharActivity : AppCompatActivity(), ItemListAdapter.OnItemClickListener {
+class ShopBgActivity : AppCompatActivity(), ItemListAdapter.OnItemClickListener {
     private lateinit var apiService: ApiService
     private lateinit var repository: ItemRepository
     private val itemViewModel: ItemViewModel by viewModels {
@@ -76,7 +76,7 @@ class ShopCharActivity : AppCompatActivity(), ItemListAdapter.OnItemClickListene
     }
 
     private fun observeViewModel() {
-        itemViewModel.getItemsByCategory("clothes").observe(this) { items ->
+        itemViewModel.getItemsByCategory("background").observe(this) { items ->
             items.let {
                 adapter.submitList(it)
                 Log.d("StoreActivity", "Fetched items from RoomDB: $it")

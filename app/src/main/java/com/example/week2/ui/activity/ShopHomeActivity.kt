@@ -22,15 +22,15 @@ class ShopHomeActivity : AppCompatActivity() {
             startActivity(intent)
         }
         hat_button.setOnClickListener {
-            val intent = Intent(this, ShopCharActivity::class.java)
+            val intent = Intent(this, ShopHatActivity::class.java)
             startActivity(intent)
         }
         acc_button.setOnClickListener {
-            val intent = Intent(this, ShopCharActivity::class.java)
+            val intent = Intent(this, ShopAccActivity::class.java)
             startActivity(intent)
         }
         bg_button.setOnClickListener {
-            val intent = Intent(this, ShopCharActivity::class.java)
+            val intent = Intent(this, ShopBgActivity::class.java)
             startActivity(intent)
         }
 
