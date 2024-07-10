@@ -16,13 +16,16 @@
         android:layout_margin="@dimen/big_padding"
         android:textSize="18sp" />
 
-    <Button
+    <android.widget.Button
         android:id="@+id/button_save"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorPrimary"
-        android:text="@string/button_save"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/button_background"
+        android:padding="12dp"
+        android:text="저장"
         android:layout_margin="@dimen/big_padding"
-        android:textColor="@color/buttonLabel" />
+        android:textColor="@color/black"
+        android:textSize="24sp" />
 
 </LinearLayout>
