@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.week2.data.item.Item
 import com.example.week2.data.item.ItemViewModel
 import com.example.week2.data.item.ItemViewModelFactory
 import com.example.week2.data.meal.WordsApplication
@@ -19,31 +20,34 @@ class ItemBgActivity : AppCompatActivity(), ItemListAdapter.OnItemClickListener 
     private val itemViewModel: ItemViewModel by viewModels {
         ItemViewModelFactory((application as WordsApplication).itemRepository)
     }
-    private val adapter = ItemListAdapter(this)
+    private val adapter = ItemListAdapter(this, true)
     private lateinit var sharedPreferences: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_inventory)
         sharedPreferences = getSharedPreferences("Items", MODE_PRIVATE)
+
         val button = findViewById<Button>(R.id.default_button)
         button.setOnClickListener {
             val editor = sharedPreferences.edit()
             editor.putInt("background", 0)
             editor.apply()
-            val savedHatId = sharedPreferences.getInt("background", 0)
-            Log.d("ItemHatActivity", "Saved background ID: $savedHatId")
+            val savedBackgroundId = sharedPreferences.getInt("background", 0)
+            Log.d("ItemBgActivity", "Saved background ID: $savedBackgroundId")
+            adapter.selectedPosition = RecyclerView.NO_POSITION
+            adapter.notifyDataSetChanged()
         }
+
         setupToolbar()
         setupRecyclerView()
 
         observeViewModel()
-
     }
+
     private fun setupToolbar() {
         val toolbar: Toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
-
         supportActionBar?.setDisplayShowTitleEnabled(false)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }
@@ -62,19 +66,33 @@ class ItemBgActivity : AppCompatActivity(), ItemListAdapter.OnItemClickListener 
 
     private fun observeViewModel() {
         itemViewModel.getPurchasedItemsByCategory("background").observe(this) { items ->
-            items.let { adapter.submitList(it) }
+            items.let {
+                adapter.submitList(it)
+                updateSelectedItem(it)
+            }
+        }
+    }
+
+    private fun updateSelectedItem(items: List<Item>) {
+        val savedBackgroundId = sharedPreferences.getInt("background", -1)
+        val selectedItemPosition = items.indexOfFirst { it.id == savedBackgroundId }
+        if (selectedItemPosition != -1) {
+            adapter.selectedPosition = selectedItemPosition
+            adapter.notifyItemChanged(selectedItemPosition)
         }
     }
 
     override fun onItemClick(position: Int) {
         val selectedItem = adapter.currentList[position]
-        saveHatIdToSharedPreferences(selectedItem.id)
+        saveBackgroundIdToSharedPreferences(selectedItem.id)
+        adapter.notifyItemChanged(position)
     }
-    private fun saveHatIdToSharedPreferences(hatId: Int) {
+
+    private fun saveBackgroundIdToSharedPreferences(backgroundId: Int) {
         val editor = sharedPreferences.edit()
-        editor.putInt("background", hatId)
+        editor.putInt("background", backgroundId)
         editor.apply()
-        val savedHatId = sharedPreferences.getInt("background", -1)
-        Log.d("ItemHatActivity", "Saved Backgroud ID: $savedHatId")
+        val savedBackgroundId = sharedPreferences.getInt("background", -1)
+        Log.d("ItemBgActivity", "Saved Background ID: $savedBackgroundId")
     }
 }
