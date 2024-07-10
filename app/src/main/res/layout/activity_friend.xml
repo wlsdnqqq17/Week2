@@ -62,17 +62,18 @@
         android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp" />
 
-    <ImageButton
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/friend_add_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:scaleType="fitCenter"
-        android:adjustViewBounds="true"
-        android:maxWidth="48dp"
-        android:maxHeight="48dp"
-        android:src="@drawable/add_friend"
+        android:backgroundTint="@color/white"
+        android:layout_margin="16dp"
+        app:borderWidth="0dp"
+        android:src="@drawable/ic_add_black_24dp"
+        android:contentDescription="@string/add_word"
+        android:background="@drawable/button_background"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_margin="16dp"/>
+        app:layout_constraintEnd_toEndOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
