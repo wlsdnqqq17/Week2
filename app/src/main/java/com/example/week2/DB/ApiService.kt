@@ -53,6 +53,29 @@ data class UpdateAvatarStateResponse(
     val created: Boolean
 )
 
+data class AvatarStateResponse(
+    val status: String,
+    val avatar_state: AvatarState?
+)
+
+data class AvatarState(
+    val user_id: String?,
+    val hat_item_id: Int?,
+    val clothes_item_id: Int?,
+    val accessory_item_id: Int?,
+    val background_item_id: Int?
+)
+
+data class ItemImageUrlResponse(
+    val status: String,
+    val data: ItemImageUrl?
+)
+
+data class ItemImageUrl(
+    val item_id: Int,
+    val item_image_url: String
+)
+
 interface ApiService {
     @POST("save_kakao_user/")
     fun saveKakaoUser(@Body user: User): Call<Void>
@@ -83,6 +106,12 @@ interface ApiService {
 
     @POST("update_avatar_state/")
     fun updateAvatarState(@Body request: UpdateAvatarStateRequest): Call<UpdateAvatarStateResponse>
+
+    @GET("get_avatar_state/")
+    fun getAvatarState(@Query("user_id") userId: String): Call<AvatarStateResponse>
+
+    @GET("get_item_image_url/")
+    fun getItemImageUrl(@Query("item_id") itemId: Int): Call<ItemImageUrlResponse>
 
 }
 
