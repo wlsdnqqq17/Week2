@@ -54,10 +54,6 @@ class MainActivity : AppCompatActivity() {
             mediaPlayer.isLooping = true
         }
         videoView.start()
-        /*------For Test-------*/
-        val intent = Intent(this@MainActivity, HomePageActivity::class.java)
-        startActivity(intent)
-        /*------For Test-------*/
         kakaoLoginButton.setOnClickListener {
             if (UserApiClient.instance.isKakaoTalkLoginAvailable(this)) {
                 UserApiClient.instance.loginWithKakaoTalk(this) { token, error ->
