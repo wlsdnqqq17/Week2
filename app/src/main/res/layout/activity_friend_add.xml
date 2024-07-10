@@ -55,11 +55,17 @@
                 android:layout_margin="16dp" />
         </LinearLayout>
 
-        <Button
+        <android.widget.Button
             android:id="@+id/friend_search_result_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="친구신청" />
+            android:layout_marginTop="16dp"
+            android:background="@drawable/button_background"
+            android:padding="12dp"
+            android:text="친구신청"
+            android:layout_margin="@dimen/big_padding"
+            android:textColor="@color/black"
+            android:textSize="24sp" />
 
     </LinearLayout>
 
