@@ -29,6 +29,7 @@ class CalendarActivity : AppCompatActivity(), MealListAdapter.OnItemClickListene
     private lateinit var calendar: Calendar
 
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_calendar)
