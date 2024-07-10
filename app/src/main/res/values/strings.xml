@@ -17,6 +17,7 @@
     <string name="word_empty_not_saved">Word not saved because it is empty.</string>
     <string name="meal_empty_not_saved">식비 지출이 기록되지 않았습니다.</string>
     <string name="add_word">Add word</string>
+    <string name="cannot_go_future_date">미래는 알 수 없습니다.</string>
     <string-array name="meal_times_array">
         <item>아침</item>
         <item>점심</item>

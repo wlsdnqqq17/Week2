@@ -1,11 +1,9 @@
 package com.example.week2
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.asLiveData
-import androidx.lifecycle.liveData
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 
@@ -26,6 +24,11 @@ class MealViewModel(private val repository: MealRepository) : ViewModel() {
     fun delete(meal: Meal) = viewModelScope.launch {
         repository.delete(meal)
     }
+
+    fun getMealsByDate(date: String): LiveData<List<Meal>> {
+        return repository.getMealsByDate(date).asLiveData()
+    }
+
 }
 
 class MealViewModelFactory(private val repository: MealRepository) : ViewModelProvider.Factory {

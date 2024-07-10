@@ -1,6 +1,7 @@
 package com.example.week2
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Intent
 import android.content.SharedPreferences
 import android.graphics.Color
@@ -13,6 +14,8 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -36,6 +39,7 @@ class HomePageActivity : AppCompatActivity() {
     private lateinit var avatarChar: ImageView
     private lateinit var avatarAcc: ImageView
     private lateinit var avatarHat: ImageView
+    private lateinit var newMealActivityLauncher: ActivityResultLauncher<Intent>
 
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -77,13 +81,18 @@ class HomePageActivity : AppCompatActivity() {
             }
         }
 
+        newMealActivityLauncher = registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult()
+        ) { result -> handleNewMealActivityResult(result.resultCode, result.data) }
+
         setBudgetButton.setOnClickListener {
             val intent = Intent(this, SetBudgetActivity::class.java)
             startActivity(intent)
         }
+
         mealIcon.setOnClickListener {
-            val intent = Intent(this, MealActivity::class.java)
-            startActivity(intent)
+            val intent = Intent(this, NewMealActivity::class.java)
+            newMealActivityLauncher.launch(intent)
         }
 
         inventoryIcon.setOnClickListener {
@@ -132,6 +141,28 @@ class HomePageActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         loadAvatarImages()
+    }
+
+    private fun handleNewMealActivityResult(resultCode: Int, data: Intent?) {
+        if (resultCode == Activity.RESULT_OK && data != null) {
+            val meal = createMealFromIntent(data)
+            mealViewModel.insert(meal)
+        } else {
+            showToast(R.string.meal_empty_not_saved)
+        }
+    }
+    private fun createMealFromIntent(data: Intent, id: Int = 0): Meal {
+        val mealTime = data.getStringExtra(NewMealActivity.EXTRA_MEAL_TIME) ?: ""
+        val mealName = data.getStringExtra(NewMealActivity.EXTRA_MEAL_NAME) ?: ""
+        val price = data.getIntExtra(NewMealActivity.EXTRA_PRICE, 0)
+        val date = data.getStringExtra(NewMealActivity.EXTRA_DATE) ?: ""
+        val memo = data.getStringExtra(NewMealActivity.EXTRA_MEMO)
+
+        return Meal(id, mealTime, mealName, price, date, memo)
+    }
+
+    private fun showToast(messageResId: Int) {
+        Toast.makeText(applicationContext, messageResId, Toast.LENGTH_LONG).show()
     }
 
     private fun loadAvatarImages() {
