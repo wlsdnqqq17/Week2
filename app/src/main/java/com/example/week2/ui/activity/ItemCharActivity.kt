@@ -35,8 +35,8 @@ class ItemCharActivity : AppCompatActivity(), ItemListAdapter.OnItemClickListene
         val toolbar_title: TextView = findViewById(R.id.toolbar_title)
         toolbar_title.text = "캐릭터"
 
-        sharedPreferences = getSharedPreferences("Items", MODE_PRIVATE)
         apiService = RetrofitClient.getInstance().create(ApiService::class.java)
+        sharedPreferences = getSharedPreferences("user_prefs", MODE_PRIVATE)
         val button = findViewById<Button>(R.id.default_button)
         button.setOnClickListener {
             val editor = sharedPreferences.edit()

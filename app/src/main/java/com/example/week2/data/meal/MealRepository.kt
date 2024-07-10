@@ -31,6 +31,11 @@ class MealRepository(private val mealDao: MealDao) {
     }
 
     @WorkerThread
+    suspend fun deleteAll() {
+        mealDao.deleteAll()
+    }
+
+    @WorkerThread
     suspend fun insert(meal: Meal) {
         mealDao.insert(meal)
     }

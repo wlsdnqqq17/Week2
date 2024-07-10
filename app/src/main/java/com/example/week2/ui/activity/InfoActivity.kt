@@ -16,14 +16,16 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class InfoActivity : AppCompatActivity() {
-    private lateinit var repository: ItemRepository
+    private lateinit var itemRepository: ItemRepository
+    private lateinit var mealRepository: MealRepository
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_info)
 
         val db = AppRoomDatabase.getDatabase(applicationContext, CoroutineScope(Dispatchers.IO))
-        repository = ItemRepository(db.itemDao())
+        itemRepository = ItemRepository(db.itemDao())
+        mealRepository = MealRepository(db.mealDao())
 
         val toolbar: Toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
@@ -72,20 +74,14 @@ class InfoActivity : AppCompatActivity() {
     // 로컬 데이터 지우는 함수
     private fun clearLocalData(onComplete: () -> Unit) {
         val sharedPref = getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
-        val itemSharedPref = getSharedPreferences("item", Context.MODE_PRIVATE)
 
         with(sharedPref.edit()) {
             clear()
             apply()
         }
-
-        with(itemSharedPref.edit()) {
-            clear()
-            apply()
-        }
-
         CoroutineScope(Dispatchers.IO).launch {
-            repository.deleteAll() // RoomDB 초기화
+            itemRepository.deleteAll() // RoomDB 초기화
+            mealRepository.deleteAll()
             Log.d("Logout", "All items deleted from the local database")
             onComplete()
         }

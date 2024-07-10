@@ -27,7 +27,7 @@ class PotatoActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_potato)
 
-        sharedPreferences = getSharedPreferences("Potato", MODE_PRIVATE)
+        sharedPreferences = getSharedPreferences("user_prefs", MODE_PRIVATE)
         potatoCount = findViewById(R.id.potato_count)
         todayButton = findViewById(R.id.today_potato)
         missionButton = findViewById(R.id.mission_potato)

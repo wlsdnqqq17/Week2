@@ -39,7 +39,7 @@ class ShopCharActivity : AppCompatActivity(), ItemListAdapter.OnItemClickListene
         setContentView(R.layout.activity_store)
 
         // Initialize SharedPreferences and TextView
-        sharedPreferences = getSharedPreferences("Potato", MODE_PRIVATE)
+        sharedPreferences = getSharedPreferences("user_prefs", MODE_PRIVATE)
         potatoCount = findViewById(R.id.potato_count)
 
         // Set saved potato count to TextView

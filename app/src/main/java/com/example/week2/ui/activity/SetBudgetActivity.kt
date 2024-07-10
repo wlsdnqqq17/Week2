@@ -20,7 +20,7 @@ class SetBudgetActivity : AppCompatActivity() {
             val inputValue = setBudgetView.text.toString().toIntOrNull()
 
             if (inputValue != null) {
-                val sharedPreferences: SharedPreferences = getSharedPreferences("Potato", MODE_PRIVATE)
+                val sharedPreferences: SharedPreferences = getSharedPreferences("user_prefs", MODE_PRIVATE)
 
                 val editor: SharedPreferences.Editor = sharedPreferences.edit()
 

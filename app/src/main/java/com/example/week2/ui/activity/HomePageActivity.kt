@@ -60,7 +60,7 @@ class HomePageActivity : AppCompatActivity() {
         val potatoIcon: ImageView = findViewById(R.id.potato_icon)
         val infoIcon: ImageView = findViewById(R.id.info)
         val progressBar: ProgressBar = findViewById(R.id.progress_bar)
-        val sharedPreferences: SharedPreferences = getSharedPreferences("Potato", MODE_PRIVATE)
+        val sharedPreferences: SharedPreferences = getSharedPreferences("user_prefs", MODE_PRIVATE)
         val savedInt = sharedPreferences.getInt("Budget", 0)
 
         mealViewModel.todayMealCostSum.observe(this) { costSum ->
@@ -166,7 +166,7 @@ class HomePageActivity : AppCompatActivity() {
     }
 
     private fun loadAvatarImages() {
-        val sharedPreferencesItems: SharedPreferences = getSharedPreferences("Items", MODE_PRIVATE)
+        val sharedPreferencesItems: SharedPreferences = getSharedPreferences("user_prefs", MODE_PRIVATE)
         val accId = sharedPreferencesItems.getInt("accessory", 0)
         val bgId = sharedPreferencesItems.getInt("background", 0)
         val charId = sharedPreferencesItems.getInt("clothes", 0)
