@@ -27,7 +27,7 @@ class ItemAccActivity : AppCompatActivity(), ItemListAdapter.OnItemClickListener
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_inventory)
-        sharedPreferences = getSharedPreferences("Items", MODE_PRIVATE)
+        sharedPreferences = getSharedPreferences("user_prefs", MODE_PRIVATE)
         val toolbar_title: TextView = findViewById(R.id.toolbar_title)
         toolbar_title.text = "악세사리"
 

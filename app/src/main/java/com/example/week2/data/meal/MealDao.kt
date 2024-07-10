@@ -17,6 +17,9 @@ interface MealDao {
     @Delete
     suspend fun delete(meal: Meal)
 
+    @Query("DELETE FROM item_table")
+    suspend fun deleteAll()
+
     @Query("SELECT SUM(price) FROM meal_table WHERE date = :date")
     fun getTodayMealCostSum(date: String): Flow<Int>
 }
