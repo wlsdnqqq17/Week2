@@ -12,12 +12,15 @@ import com.bumptech.glide.Glide
 import com.example.week2.R
 import com.example.week2.data.item.Item
 
-class ItemListAdapter(private val onItemClickListener: OnItemClickListener) : ListAdapter<Item, ItemListAdapter.ItemViewHolder>(ITEMS_COMPARATOR) {
+class ItemListAdapter(
+    private val onItemClickListener: OnItemClickListener,
+    private val showCheckmark: Boolean = false // 추가된 부분
+) : ListAdapter<Item, ItemListAdapter.ItemViewHolder>(ITEMS_COMPARATOR) {
 
     var selectedPosition: Int = RecyclerView.NO_POSITION
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
-        return ItemViewHolder.create(parent, onItemClickListener, this)
+        return ItemViewHolder.create(parent, onItemClickListener, this, showCheckmark) // 수정된 부분
     }
 
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
@@ -25,7 +28,12 @@ class ItemListAdapter(private val onItemClickListener: OnItemClickListener) : Li
         holder.bind(current.name, current.price, current.item_image_url, position == selectedPosition)
     }
 
-    class ItemViewHolder(itemView: View, private val onItemClickListener: OnItemClickListener, private val adapter: ItemListAdapter) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
+    class ItemViewHolder(
+        itemView: View,
+        private val onItemClickListener: OnItemClickListener,
+        private val adapter: ItemListAdapter,
+        private val showCheckmark: Boolean // 추가된 부분
+    ) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
         private val itemImageView: ImageView = itemView.findViewById(R.id.imageView)
         private val checkmarkImageView: ImageView = itemView.findViewById(R.id.checkmark)
         private val itemItemView1: TextView = itemView.findViewById(R.id.textView1)
@@ -41,24 +49,35 @@ class ItemListAdapter(private val onItemClickListener: OnItemClickListener) : Li
                 .into(itemImageView)
             itemItemView1.text = name
             itemItemView2.text = cost.toString()
-            checkmarkImageView.visibility = if (isSelected) View.VISIBLE else View.GONE
+            if (showCheckmark) { // 수정된 부분
+                checkmarkImageView.visibility = if (isSelected) View.VISIBLE else View.GONE
+            } else {
+                checkmarkImageView.visibility = View.GONE
+            }
         }
 
         override fun onClick(v: View?) {
             val position = adapterPosition
             if (position != RecyclerView.NO_POSITION) {
-                adapter.notifyItemChanged(adapter.selectedPosition)
-                adapter.selectedPosition = position
-                adapter.notifyItemChanged(adapter.selectedPosition)
+                if (showCheckmark) { // 수정된 부분
+                    adapter.notifyItemChanged(adapter.selectedPosition)
+                    adapter.selectedPosition = position
+                    adapter.notifyItemChanged(adapter.selectedPosition)
+                }
                 onItemClickListener.onItemClick(position)
             }
         }
 
         companion object {
-            fun create(parent: ViewGroup, onItemClickListener: OnItemClickListener, adapter: ItemListAdapter): ItemViewHolder {
+            fun create(
+                parent: ViewGroup,
+                onItemClickListener: OnItemClickListener,
+                adapter: ItemListAdapter,
+                showCheckmark: Boolean // 추가된 부분
+            ): ItemViewHolder {
                 val view: View = LayoutInflater.from(parent.context)
                     .inflate(R.layout.item_recyclerview_item, parent, false)
-                return ItemViewHolder(view, onItemClickListener, adapter)
+                return ItemViewHolder(view, onItemClickListener, adapter, showCheckmark)
             }
         }
     }

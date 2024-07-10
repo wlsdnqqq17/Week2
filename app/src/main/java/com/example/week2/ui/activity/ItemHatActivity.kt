@@ -20,7 +20,7 @@ class ItemHatActivity : AppCompatActivity(), ItemListAdapter.OnItemClickListener
     private val itemViewModel: ItemViewModel by viewModels {
         ItemViewModelFactory((application as WordsApplication).itemRepository)
     }
-    private val adapter = ItemListAdapter(this)
+    private val adapter = ItemListAdapter(this, true)
     private lateinit var sharedPreferences: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
