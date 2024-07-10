@@ -53,44 +53,48 @@ class InfoActivity : AppCompatActivity() {
         logoutButton.setOnClickListener {
             UserApiClient.instance.logout { error ->
                 if (error != null) {
-                    Log.e("Logout", "로그아웃 실패. SDK에서 토큰 삭제됨", error)
+                    Log.e("Logout", "로그아웃 실패", error)
                 } else {
-                    Log.i("Logout", "로그아웃 성공. SDK에서 토큰 삭제됨")
-                    val editor = sharedPref.edit()
-                    editor.clear()
-                    editor.apply()
-
-                    CoroutineScope(Dispatchers.IO).launch {
-                        repository.deleteAll() // RoomDB 초기화
-                        Log.d("Logout", "All items deleted from the local database")
-                    }
-
-                    val intent = Intent(this@InfoActivity, MainActivity::class.java)
-                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                    startActivity(intent)
-                    finish()
+                    Log.i("Logout", "로그아웃 성공")
+                }
+                clearLocalData {
+                    navigateToMainActivity()
                 }
             }
         }
     }
+
     override fun onSupportNavigateUp(): Boolean {
         onBackPressedDispatcher.onBackPressed()
         return true
     }
 
-    private fun logout() {
-        CoroutineScope(Dispatchers.IO).launch {
-            repository.deleteAll() // RoomDB 초기화
-            Log.d("Logout", "All items deleted from the local database")
-        }
-
+    // 로컬 데이터 지우는 함수
+    private fun clearLocalData(onComplete: () -> Unit) {
         val sharedPref = getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
+        val itemSharedPref = getSharedPreferences("item", Context.MODE_PRIVATE)
+
         with(sharedPref.edit()) {
-            clear() // SharedPreferences 초기화
+            clear()
             apply()
         }
 
+        with(itemSharedPref.edit()) {
+            clear()
+            apply()
+        }
+
+        CoroutineScope(Dispatchers.IO).launch {
+            repository.deleteAll() // RoomDB 초기화
+            Log.d("Logout", "All items deleted from the local database")
+            onComplete()
+        }
+    }
+
+    // 메인 액티비티로 이동하는 함수
+    private fun navigateToMainActivity() {
         val intent = Intent(this, MainActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         startActivity(intent)
         finish()
     }

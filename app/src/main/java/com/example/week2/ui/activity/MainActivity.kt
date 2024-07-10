@@ -55,8 +55,8 @@ class MainActivity : AppCompatActivity() {
         }
         videoView.start()
         /*------For Test-------*/
-        val intent = Intent(this@MainActivity, HomePageActivity::class.java)
-        startActivity(intent)
+        //val intent = Intent(this@MainActivity, HomePageActivity::class.java)
+        //startActivity(intent)
         /*------For Test-------*/
         kakaoLoginButton.setOnClickListener {
             if (UserApiClient.instance.isKakaoTalkLoginAvailable(this)) {
