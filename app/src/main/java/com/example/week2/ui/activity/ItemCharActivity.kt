@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.week2.data.item.Item
 import com.example.week2.data.item.ItemViewModel
 import com.example.week2.data.item.ItemViewModelFactory
 import com.example.week2.data.meal.WordsApplication
@@ -32,19 +33,20 @@ class ItemCharActivity : AppCompatActivity(), ItemListAdapter.OnItemClickListene
             val editor = sharedPreferences.edit()
             editor.putInt("clothes", 0)
             editor.apply()
-            val savedHatId = sharedPreferences.getInt("clothes", 0)
-            Log.d("ItemHatActivity", "Saved clothes ID: $savedHatId")
+            val savedClothesId = sharedPreferences.getInt("clothes", 0)
+            Log.d("ItemCharActivity", "Saved clothes ID: $savedClothesId")
+            adapter.selectedPosition = RecyclerView.NO_POSITION
+            adapter.notifyDataSetChanged()
         }
         setupToolbar()
         setupRecyclerView()
 
         observeViewModel()
-
     }
+
     private fun setupToolbar() {
         val toolbar: Toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
-
         supportActionBar?.setDisplayShowTitleEnabled(false)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }
@@ -63,19 +65,33 @@ class ItemCharActivity : AppCompatActivity(), ItemListAdapter.OnItemClickListene
 
     private fun observeViewModel() {
         itemViewModel.getPurchasedItemsByCategory("clothes").observe(this) { items ->
-            items.let { adapter.submitList(it) }
+            items.let {
+                adapter.submitList(it)
+                updateSelectedItem(it)
+            }
+        }
+    }
+
+    private fun updateSelectedItem(items: List<Item>) {
+        val savedClothesId = sharedPreferences.getInt("clothes", -1)
+        val selectedItemPosition = items.indexOfFirst { it.id == savedClothesId }
+        if (selectedItemPosition != -1) {
+            adapter.selectedPosition = selectedItemPosition
+            adapter.notifyItemChanged(selectedItemPosition)
         }
     }
 
     override fun onItemClick(position: Int) {
         val selectedItem = adapter.currentList[position]
-        saveHatIdToSharedPreferences(selectedItem.id)
+        saveClothesIdToSharedPreferences(selectedItem.id)
+        adapter.notifyItemChanged(position)
     }
-    private fun saveHatIdToSharedPreferences(hatId: Int) {
+
+    private fun saveClothesIdToSharedPreferences(clothesId: Int) {
         val editor = sharedPreferences.edit()
-        editor.putInt("clothes", hatId)
+        editor.putInt("clothes", clothesId)
         editor.apply()
-        val savedHatId = sharedPreferences.getInt("clothes", -1)
-        Log.d("ItemHatActivity", "Saved clothes ID: $savedHatId")
+        val savedClothesId = sharedPreferences.getInt("clothes", -1)
+        Log.d("ItemCharActivity", "Saved clothes ID: $savedClothesId")
     }
 }

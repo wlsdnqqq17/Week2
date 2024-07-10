@@ -14,17 +14,20 @@ import com.example.week2.data.item.Item
 
 class ItemListAdapter(private val onItemClickListener: OnItemClickListener) : ListAdapter<Item, ItemListAdapter.ItemViewHolder>(ITEMS_COMPARATOR) {
 
+    var selectedPosition: Int = RecyclerView.NO_POSITION
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
-        return ItemViewHolder.create(parent, onItemClickListener)
+        return ItemViewHolder.create(parent, onItemClickListener, this)
     }
 
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
         val current = getItem(position)
-        holder.bind(current.name, current.price, current.item_image_url)
+        holder.bind(current.name, current.price, current.item_image_url, position == selectedPosition)
     }
 
-    class ItemViewHolder(itemView: View, private val onItemClickListener: OnItemClickListener) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
+    class ItemViewHolder(itemView: View, private val onItemClickListener: OnItemClickListener, private val adapter: ItemListAdapter) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
         private val itemImageView: ImageView = itemView.findViewById(R.id.imageView)
+        private val checkmarkImageView: ImageView = itemView.findViewById(R.id.checkmark)
         private val itemItemView1: TextView = itemView.findViewById(R.id.textView1)
         private val itemItemView2: TextView = itemView.findViewById(R.id.textView2)
 
@@ -32,26 +35,30 @@ class ItemListAdapter(private val onItemClickListener: OnItemClickListener) : Li
             itemView.setOnClickListener(this)
         }
 
-        fun bind(name: String?, cost: Int?, imageUrl: String?) {
+        fun bind(name: String?, cost: Int?, imageUrl: String?, isSelected: Boolean) {
             Glide.with(itemView.context)
                 .load(imageUrl)
                 .into(itemImageView)
             itemItemView1.text = name
             itemItemView2.text = cost.toString()
+            checkmarkImageView.visibility = if (isSelected) View.VISIBLE else View.GONE
         }
 
         override fun onClick(v: View?) {
             val position = adapterPosition
             if (position != RecyclerView.NO_POSITION) {
+                adapter.notifyItemChanged(adapter.selectedPosition)
+                adapter.selectedPosition = position
+                adapter.notifyItemChanged(adapter.selectedPosition)
                 onItemClickListener.onItemClick(position)
             }
         }
 
         companion object {
-            fun create(parent: ViewGroup, onItemClickListener: OnItemClickListener): ItemViewHolder {
+            fun create(parent: ViewGroup, onItemClickListener: OnItemClickListener, adapter: ItemListAdapter): ItemViewHolder {
                 val view: View = LayoutInflater.from(parent.context)
                     .inflate(R.layout.item_recyclerview_item, parent, false)
-                return ItemViewHolder(view, onItemClickListener)
+                return ItemViewHolder(view, onItemClickListener, adapter)
             }
         }
     }
@@ -59,11 +66,11 @@ class ItemListAdapter(private val onItemClickListener: OnItemClickListener) : Li
     companion object {
         private val ITEMS_COMPARATOR = object : DiffUtil.ItemCallback<Item>() {
             override fun areItemsTheSame(oldItem: Item, newItem: Item): Boolean {
-                return oldItem === newItem
+                return oldItem.id == newItem.id
             }
 
             override fun areContentsTheSame(oldItem: Item, newItem: Item): Boolean {
-                return oldItem.name == newItem.name
+                return oldItem == newItem
             }
         }
     }
