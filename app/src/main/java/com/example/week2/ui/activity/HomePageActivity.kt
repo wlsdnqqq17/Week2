@@ -106,7 +106,7 @@ class HomePageActivity : AppCompatActivity() {
         }
 
         storeIcon.setOnClickListener {
-            val intent = Intent(this, StoreActivity::class.java)
+            val intent = Intent(this, ShopHomeActivity::class.java)
             startActivity(intent)
         }
 

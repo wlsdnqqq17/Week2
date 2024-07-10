@@ -34,4 +34,7 @@ interface ItemDao {
 
     @Query("SELECT * FROM item_table WHERE is_purchased = 1 AND category = :category")
     fun getPurchasedItemsByCategory(category: String): Flow<List<Item>>
+
+    @Query("SELECT * FROM item_table WHERE category = :category")
+    fun getItemsByCategory(category: String): Flow<List<Item>>
 }

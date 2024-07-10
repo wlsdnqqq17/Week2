@@ -11,6 +11,10 @@ class ItemRepository(private val itemDao: ItemDao) {
         return itemDao.getPurchasedItemsByCategory(category)
     }
 
+    fun getItemsByCategory(category: String): Flow<List<Item>> {
+        return itemDao.getItemsByCategory(category)
+    }
+
     @WorkerThread
     suspend fun insert(item: Item) {
         itemDao.insert(item)
