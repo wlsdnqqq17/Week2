@@ -66,6 +66,16 @@ data class AvatarState(
     val background_item_id: Int?
 )
 
+data class ItemImageUrlResponse(
+    val status: String,
+    val data: ItemImageUrl?
+)
+
+data class ItemImageUrl(
+    val item_id: Int,
+    val item_image_url: String
+)
+
 interface ApiService {
     @POST("save_kakao_user/")
     fun saveKakaoUser(@Body user: User): Call<Void>
@@ -99,6 +109,9 @@ interface ApiService {
 
     @GET("get_avatar_state/")
     fun getAvatarState(@Query("user_id") userId: String): Call<AvatarStateResponse>
+
+    @GET("get_item_image_url/")
+    fun getItemImageUrl(@Query("item_id") itemId: Int): Call<ItemImageUrlResponse>
 
 }
 
