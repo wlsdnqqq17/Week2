@@ -36,8 +36,8 @@ class CalendarActivity : AppCompatActivity(), MealListAdapter.OnItemClickListene
         setupToolbar()
         setupRecyclerView()
         setupActivityLaunchers()
-        observeViewModel()
         setupDateNavigation()
+
 
     }
     override fun onSupportNavigateUp(): Boolean {
@@ -65,7 +65,8 @@ class CalendarActivity : AppCompatActivity(), MealListAdapter.OnItemClickListene
     }
 
     private fun observeViewModel() {
-        mealViewModel.todayMeals.observe(this) { meals ->
+        val calendarDate = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(calendar.time)
+        mealViewModel.getMealsByDate(calendarDate).observe(this) { meals ->
             meals.let { adapter.submitList(it) }
         }
     }
@@ -125,6 +126,7 @@ class CalendarActivity : AppCompatActivity(), MealListAdapter.OnItemClickListene
         val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
         val dateString = sdf.format(calendar.time)
         currentDateTextView.text = dateString
+        observeViewModel()
     }
 
     override fun onItemClick(position: Int) {

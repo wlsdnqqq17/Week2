@@ -14,6 +14,12 @@ class MealRepository(private val mealDao: MealDao) {
         get() {
             return mealDao.getMealsByDate(getTodayDate())
         }
+
+    fun getMealsByDate(date: String): Flow<List<Meal>> {
+        return mealDao.getMealsByDate(date)
+    }
+
+
     fun getYesterdayMealCostSum(): LiveData<Int> {
         val yesterday = getYesterdayDate()
         return mealDao.getTodayMealCostSum(yesterday).asLiveData()
