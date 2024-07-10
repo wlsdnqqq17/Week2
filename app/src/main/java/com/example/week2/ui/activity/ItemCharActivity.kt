@@ -4,6 +4,7 @@ import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
+import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
@@ -26,6 +27,8 @@ class ItemCharActivity : AppCompatActivity(), ItemListAdapter.OnItemClickListene
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_inventory)
+        val toolbar_title: TextView = findViewById(R.id.toolbar_title)
+        toolbar_title.text = "캐릭터"
 
         sharedPreferences = getSharedPreferences("Items", MODE_PRIVATE)
         val button = findViewById<Button>(R.id.default_button)

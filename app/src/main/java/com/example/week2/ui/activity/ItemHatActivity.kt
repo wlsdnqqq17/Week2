@@ -4,6 +4,7 @@ import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
+import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
@@ -27,6 +28,8 @@ class ItemHatActivity : AppCompatActivity(), ItemListAdapter.OnItemClickListener
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_inventory)
         sharedPreferences = getSharedPreferences("Items", MODE_PRIVATE)
+        val toolbar_title: TextView = findViewById(R.id.toolbar_title)
+        toolbar_title.text = "모자"
 
         val button = findViewById<Button>(R.id.default_button)
         button.setOnClickListener {
