@@ -29,6 +29,9 @@ interface ItemDao {
     @Delete
     suspend fun deleteAll(items: List<Item>)
 
+    @Query("DELETE FROM item_table")
+    suspend fun deleteAll()
+
     @Query("SELECT * FROM item_table WHERE is_purchased = 1 AND category = :category")
     fun getPurchasedItemsByCategory(category: String): Flow<List<Item>>
 }

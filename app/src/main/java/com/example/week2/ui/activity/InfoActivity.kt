@@ -8,12 +8,22 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import com.example.week2.data.AppRoomDatabase
+import com.example.week2.data.item.ItemRepository
 import com.kakao.sdk.user.UserApiClient
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class InfoActivity : AppCompatActivity() {
+    private lateinit var repository: ItemRepository
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_info)
+
+        val db = AppRoomDatabase.getDatabase(applicationContext, CoroutineScope(Dispatchers.IO))
+        repository = ItemRepository(db.itemDao())
 
         val toolbar: Toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
@@ -41,19 +51,22 @@ class InfoActivity : AppCompatActivity() {
         }
 
         logoutButton.setOnClickListener {
-            UserApiClient.instance.logout { error ->
-                if (error != null) {
-                    Log.e("Logout", "로그아웃 실패. SDK에서 토큰 삭제됨", error)
-                } else {
-                    Log.i("Logout", "로그아웃 성공. SDK에서 토큰 삭제됨")
-                    val editor = sharedPref.edit()
-                    editor.clear()
-                    editor.apply()
+            val sharedPref = getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
+            val token = sharedPref.getString("access_token", null)
 
-                    val intent = Intent(this, MainActivity::class.java)
-                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                    startActivity(intent)
-                    finish()
+            if (token == null) {
+                Log.e("Logout", "토큰이 없음. 로컬 데이터만 지웁니다.")
+                clearLocalData()
+                navigateToMainActivity()
+            } else {
+                UserApiClient.instance.logout { error ->
+                    if (error != null) {
+                        Log.e("Logout", "로그아웃 실패", error)
+                    } else {
+                        Log.i("Logout", "로그아웃 성공")
+                        clearLocalData()
+                        navigateToMainActivity()
+                    }
                 }
             }
         }
@@ -61,5 +74,28 @@ class InfoActivity : AppCompatActivity() {
     override fun onSupportNavigateUp(): Boolean {
         onBackPressedDispatcher.onBackPressed()
         return true
+    }
+
+
+    // 로컬 데이터 지우는 함수
+    private fun clearLocalData() {
+        val sharedPref = getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
+        with(sharedPref.edit()) {
+            clear()
+            apply()
+        }
+
+        CoroutineScope(Dispatchers.IO).launch {
+            repository.deleteAll() // RoomDB 초기화
+            Log.d("Logout", "All items deleted from the local database")
+        }
+    }
+
+    // 메인 액티비티로 이동하는 함수
+    private fun navigateToMainActivity() {
+        val intent = Intent(this, MainActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        startActivity(intent)
+        finish()
     }
 }
