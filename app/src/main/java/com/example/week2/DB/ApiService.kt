@@ -43,6 +43,16 @@ data class PurchaseItemResponse(
     val error: String?
 )
 
+data class UpdateAvatarStateRequest(
+    val user_id: String,
+    val item_id: Int?
+)
+
+data class UpdateAvatarStateResponse(
+    val status: String,
+    val created: Boolean
+)
+
 interface ApiService {
     @POST("save_kakao_user/")
     fun saveKakaoUser(@Body user: User): Call<Void>
@@ -70,5 +80,9 @@ interface ApiService {
 
     @GET("user_items/")
     fun getUserItems(@Query("user_id") userId: String): Call<List<Item>>
+
+    @POST("update_avatar_state/")
+    fun updateAvatarState(@Body request: UpdateAvatarStateRequest): Call<UpdateAvatarStateResponse>
+
 }
 

@@ -1,5 +1,6 @@
 package com.example.week2
 
+import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
@@ -15,6 +16,9 @@ import com.example.week2.data.item.ItemViewModel
 import com.example.week2.data.item.ItemViewModelFactory
 import com.example.week2.data.meal.WordsApplication
 import com.example.week2.ui.adapter.ItemListAdapter
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class ItemAccActivity : AppCompatActivity(), ItemListAdapter.OnItemClickListener {
 
@@ -23,11 +27,13 @@ class ItemAccActivity : AppCompatActivity(), ItemListAdapter.OnItemClickListener
     }
     private val adapter = ItemListAdapter(this, true)
     private lateinit var sharedPreferences: SharedPreferences
+    private lateinit var apiService: ApiService
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_inventory)
         sharedPreferences = getSharedPreferences("Items", MODE_PRIVATE)
+        apiService = RetrofitClient.getInstance().create(ApiService::class.java)
         val toolbar_title: TextView = findViewById(R.id.toolbar_title)
         toolbar_title.text = "악세사리"
 
@@ -90,6 +96,11 @@ class ItemAccActivity : AppCompatActivity(), ItemListAdapter.OnItemClickListener
     override fun onItemClick(position: Int) {
         val selectedItem = adapter.currentList[position]
         saveAccessoryIdToSharedPreferences(selectedItem.id)
+
+        val sharedPref = getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
+        val login_id = sharedPref.getString("login_id", "") ?: ""
+        updateAvatarState(login_id, selectedItem.id)
+
         adapter.notifyItemChanged(position)
     }
 
@@ -99,5 +110,23 @@ class ItemAccActivity : AppCompatActivity(), ItemListAdapter.OnItemClickListener
         editor.apply()
         val savedAccessoryId = sharedPreferences.getInt("accessory", -1)
         Log.d("ItemAccActivity", "Saved Accessory ID: $savedAccessoryId")
+    }
+
+    private fun updateAvatarState(userId: String, itemId: Int) {
+        val request = UpdateAvatarStateRequest(userId, itemId)
+        apiService.updateAvatarState(request).enqueue(object : Callback<UpdateAvatarStateResponse> {
+            override fun onResponse(call: Call<UpdateAvatarStateResponse>, response: Response<UpdateAvatarStateResponse>) {
+                if (response.isSuccessful) {
+                    val status = response.body()?.status
+                    Log.d("UpdateAvatarState", "Status: $status")
+                } else {
+                    Log.e("UpdateAvatarState", "Failed to update avatar state. Error code: ${response.code()}")
+                }
+            }
+
+            override fun onFailure(call: Call<UpdateAvatarStateResponse>, t: Throwable) {
+                Log.e("UpdateAvatarState", "Error: ${t.message}")
+            }
+        })
     }
 }

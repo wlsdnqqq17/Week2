@@ -1,5 +1,6 @@
 package com.example.week2
 
+import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
@@ -15,6 +16,9 @@ import com.example.week2.data.item.ItemViewModel
 import com.example.week2.data.item.ItemViewModelFactory
 import com.example.week2.data.meal.WordsApplication
 import com.example.week2.ui.adapter.ItemListAdapter
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class ItemCharActivity : AppCompatActivity(), ItemListAdapter.OnItemClickListener {
 
@@ -23,6 +27,7 @@ class ItemCharActivity : AppCompatActivity(), ItemListAdapter.OnItemClickListene
     }
     private val adapter = ItemListAdapter(this, true)
     private lateinit var sharedPreferences: SharedPreferences
+    private lateinit var apiService: ApiService
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,6 +36,7 @@ class ItemCharActivity : AppCompatActivity(), ItemListAdapter.OnItemClickListene
         toolbar_title.text = "캐릭터"
 
         sharedPreferences = getSharedPreferences("Items", MODE_PRIVATE)
+        apiService = RetrofitClient.getInstance().create(ApiService::class.java)
         val button = findViewById<Button>(R.id.default_button)
         button.setOnClickListener {
             val editor = sharedPreferences.edit()
@@ -87,6 +93,11 @@ class ItemCharActivity : AppCompatActivity(), ItemListAdapter.OnItemClickListene
     override fun onItemClick(position: Int) {
         val selectedItem = adapter.currentList[position]
         saveClothesIdToSharedPreferences(selectedItem.id)
+
+        val sharedPref = getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
+        val login_id = sharedPref.getString("login_id", "") ?: ""
+        updateAvatarState(login_id, selectedItem.id)
+
         adapter.notifyItemChanged(position)
     }
 
@@ -96,5 +107,23 @@ class ItemCharActivity : AppCompatActivity(), ItemListAdapter.OnItemClickListene
         editor.apply()
         val savedClothesId = sharedPreferences.getInt("clothes", -1)
         Log.d("ItemCharActivity", "Saved clothes ID: $savedClothesId")
+    }
+
+    private fun updateAvatarState(userId: String, itemId: Int) {
+        val request = UpdateAvatarStateRequest(userId, itemId)
+        apiService.updateAvatarState(request).enqueue(object : Callback<UpdateAvatarStateResponse> {
+            override fun onResponse(call: Call<UpdateAvatarStateResponse>, response: Response<UpdateAvatarStateResponse>) {
+                if (response.isSuccessful) {
+                    val status = response.body()?.status
+                    Log.d("UpdateAvatarState", "Status: $status")
+                } else {
+                    Log.e("UpdateAvatarState", "Failed to update avatar state. Error code: ${response.code()}")
+                }
+            }
+
+            override fun onFailure(call: Call<UpdateAvatarStateResponse>, t: Throwable) {
+                Log.e("UpdateAvatarState", "Error: ${t.message}")
+            }
+        })
     }
 }
