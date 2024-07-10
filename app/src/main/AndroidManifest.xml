@@ -39,7 +39,8 @@
         <activity android:name=".MealActivity" />
         <activity android:name=".FriendActivity" />
         <activity android:name=".CalendarActivity" />
-        <activity android:name=".StoreActivity" />
+        <activity android:name=".ShopCharActivity" />
+        <activity android:name=".ShopHomeActivity" />
         <activity android:name=".InfoActivity" />
         <activity android:name=".PotatoActivity" />
         <activity android:name=".HomePageActivity"/>

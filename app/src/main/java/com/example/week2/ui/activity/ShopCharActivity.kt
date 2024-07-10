@@ -24,7 +24,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class StoreActivity : AppCompatActivity(), ItemListAdapter.OnItemClickListener {
+class ShopCharActivity : AppCompatActivity(), ItemListAdapter.OnItemClickListener {
     private lateinit var apiService: ApiService
     private lateinit var repository: ItemRepository
     private val itemViewModel: ItemViewModel by viewModels {
